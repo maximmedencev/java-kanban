@@ -3,16 +3,16 @@ public class Main {
 
         TaskManager taskManager = new TaskManager();
 
-        Task t1 = new Task("Ремонт", "Отремонтировать телефон");
-
-        taskManager.addTask(t1);
-        System.out.println(taskManager.getTask(t1.getId()).getDescription());
-
-
-        Task t2 = new Task("Ремонт", "Отремонтировать планшет");
-
-        taskManager.updateTask(t2);
-        System.out.println(taskManager.getTask(t2.getId()).getDescription());
+//        Task t1 = new Task("Ремонт", "Отремонтировать телефон");
+//
+//        taskManager.addTask(t1);
+//        System.out.println(taskManager.getTask(t1.getId()).getDescription());
+//
+//
+//        Task t2 = new Task("Ремонт", "Отремонтировать планшет");
+//
+//        taskManager.updateTask(t2);
+//        System.out.println(taskManager.getTask(t2.getId()).getDescription());
 
 
         Epic e1=new Epic("Попить чай","Отвлечься");
@@ -25,10 +25,17 @@ public class Main {
         taskManager.addSubtask(e1.getId(),st1);
         taskManager.addSubtask(e1.getId(),st2);
 
+        st1.setStatus(TaskStatus.DONE);
+        st2.setStatus(TaskStatus.DONE);
+
         Subtask st3 = new Subtask(st1.getId(), "Вставание","Надо встать");
         Subtask st4 = new Subtask(st2.getId(), "Вскипятить воду","Дойти до чайника");
-        st3.setStatus(TaskStatus.IN_PROGRESS);
-        taskManager.updateSubtask(st3);
+
+        st3.setStatus(TaskStatus.DONE);
+        st4.setStatus(TaskStatus.DONE);
+
+        taskManager.addSubtask(e1.getId(),st3);
+        taskManager.addSubtask(e1.getId(),st4);
 
         System.out.println(e1.getStatus());
 
@@ -37,7 +44,7 @@ public class Main {
 
         taskManager.updateEpic(e2);
 
-        System.out.println(taskManager.getEpicSubtasksList(e2.getId()).get(1).getName());
+        //System.out.println(taskManager.getEpicSubtasksList(e2.getId()).get(1).getName());
 
     }
 }
