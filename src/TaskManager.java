@@ -44,7 +44,7 @@ public class TaskManager {
     public void removeAllSubTasks() {
         this.subtasks.clear();
         for(Epic e: epics.values()){
-            e.setStatus(TaskStatus.NEW);
+            e.calculateStatus();
         }
 
     }
@@ -106,14 +106,8 @@ public class TaskManager {
 
 
     public ArrayList<Subtask> getEpicSubtasksList(int epicId){
-        ArrayList<Subtask> arrayListSubTasks= new ArrayList<>();
-        for(Subtask st: subtasks.values()){
-            if(st.getEpicId()==epicId){
-                arrayListSubTasks.add(st);
-            }
-        }
-        return arrayListSubTasks;
 
+        return epics.get(epicId).getSubtasksList();
     }
 
     public void updateSubtask(Subtask subtask) {
@@ -133,50 +127,10 @@ public class TaskManager {
         if (subTaskOldStatus != subtask.getStatus()) {// проверяем другой ли статус в новом subtask'e
                                                       // если да, то определяем новый статус epic'a
 
-            for (Subtask st : subtasks.values()) {    // заполняем список статусов  всех  subtask'oв epic'a
-                if (st.getEpicId() == subtask.getEpicId()) {
-                    allEpicSubtasksStatuses.add(st.getStatus());
-                }
-            }
+
 
             //если есть хоть один статус IN_PROGRESS, назначаес epic'у статус IN_PROGRESS и завершаем метод
-            for (TaskStatus status : allEpicSubtasksStatuses) {
-                if (status == TaskStatus.IN_PROGRESS) {
-                    epics.get(subtask.getEpicId()).setStatus(TaskStatus.IN_PROGRESS);
-                    return;
-                }
-            }
 
-            boolean isAllEpicStatusesIsDone = true;
-
-            for (TaskStatus status : allEpicSubtasksStatuses) {
-                if (status == TaskStatus.NEW) {
-                    isAllEpicStatusesIsDone = false;
-                    break;
-                }
-            }
-
-            if (isAllEpicStatusesIsDone) {//  если все статусы DONE(нет статусов NEW)
-                epics.get(subtask.getEpicId()).setStatus(TaskStatus.DONE);
-                return;
-            }
-
-            boolean isAllEpicStatusesIsNew = true;
-
-            for (TaskStatus status : allEpicSubtasksStatuses) {
-                if (status == TaskStatus.DONE) {
-                    isAllEpicStatusesIsNew = false;
-                    break;
-                }
-            }
-
-            if (isAllEpicStatusesIsNew) {//  если все статусы NEW(нет статусов DONE)
-                epics.get(subtask.getEpicId()).setStatus(TaskStatus.NEW);
-                return;
-            }
-
-            //если DONE и NEW  вперемежку назначаем epic'у статус IN_PROGRESS
-            epics.get(subtask.getEpicId()).setStatus(TaskStatus.IN_PROGRESS);
 
         }
 
