@@ -3,7 +3,7 @@ import java.util.HashMap;
 
 public class Epic extends Task {
 
-    HashMap<Integer, Subtask> subtasks = new HashMap<>();
+    private ArrayList <Integer> subtasksIds = new ArrayList<>();
 
     public Epic(String name, String description) {
         super(name, description);
@@ -14,14 +14,26 @@ public class Epic extends Task {
     }
 
     public void removeSubtask(int id) {
-        subtasks.remove(id);
+        subtasksIds.remove(id);
     }
 
-    public void addSubtask(Subtask subtask) {
-        subtasks.put(subtask.getId(), subtask);
+    public void addSubtask(int subtaskId) {
+        if(!this.subtasksIds.contains(subtaskId))
+            this.subtasksIds.add(subtaskId);
     }
 
-    public ArrayList<Subtask> getSubtasks() {
-        return new ArrayList<>(subtasks.values());
+    public ArrayList<Integer> getSubtasks() {
+        return this.subtasksIds;
+    }
+
+    @Override
+    public String toString() {
+        return "Epic{" +
+                "id=" + this.getId() +
+                ", name='" + this.getName() + '\'' +
+                ", description='" + this.getDescription() + '\'' +
+                ", status=" + this.getStatus() +
+                ", subtasksIds=" + subtasksIds +
+                '}';
     }
 }

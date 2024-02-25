@@ -24,4 +24,15 @@ public class Subtask extends Task{
         super(name, description);
 
     }
+
+    @Override
+    public String toString() {
+        return "Subtask{" +
+                "id=" + this.getId() +
+                ", name='" + this.getName() + '\'' +
+                ", description='" + this.getDescription() + '\'' +
+                ", status=" + this.getStatus() +
+                ", epicId=" + epicId +
+                '}';
+    }
 }

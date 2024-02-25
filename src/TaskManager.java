@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class TaskManager {
 
@@ -7,7 +8,7 @@ public class TaskManager {
     private final HashMap<Integer, Epic> epics;
     private final HashMap<Integer, Subtask> subtasks;
 
-    private static int newTaskId = 0;
+    private static int newTaskId = 1;
 
     public TaskManager() {
         this.tasks = new HashMap<>();
@@ -46,7 +47,6 @@ public class TaskManager {
         for (Epic e : epics.values()) {
             e.setStatus(TaskStatus.NEW);
         }
-
     }
 
     public void removeTask(int taskId) {
@@ -74,14 +74,13 @@ public class TaskManager {
     }
 
     public void addSubtask(int epicId, Subtask subtask) {
-        setIdForNewTask(subtask);
-        epics.get(epicId).addSubtask(subtask);
+        if (subtask.getId() == 0)
+            setIdForNewTask(subtask);
+        epics.get(epicId).addSubtask(subtask.getId());
         subtask.setEpicId(epicId);
         subtasks.put(subtask.getId(), subtask);
         refreshEpicStatus(subtask.getEpicId());
-
     }
-
 
     public Task getTask(int id) {
         return this.tasks.get(id);
@@ -111,20 +110,25 @@ public class TaskManager {
 
 
     public ArrayList<Subtask> getEpicSubtasksList(int epicId) {
-        return epics.get(epicId).getSubtasks();
+        ArrayList<Subtask> subtaskList = new ArrayList<>();
+
+
+        for (Subtask st : this.subtasks.values()) {
+            if (st.getEpicId() == epicId) {
+                subtaskList.add(st);
+            }
+        }
+
+        return subtaskList;
 
     }
 
-    public void refreshEpicStatus(int epicId) {
-
-
+    private void refreshEpicStatus(int epicId) {
         //для хранения всех статусов subtask'ов эпика, которому принадлежит subtask
         ArrayList<TaskStatus> allEpicSubtasksStatuses = new ArrayList<>();
-
-        for (Subtask st : epics.get(epicId).getSubtasks()) {    // заполняем список статусов  всех  subtask'oв epic'a
+        for (Subtask st : this.getEpicSubtasksList(epicId)) {    // заполняем список статусов  всех  subtask'oв epic'a
             allEpicSubtasksStatuses.add(st.getStatus());
         }
-
 
         //если есть хоть один статус IN_PROGRESS, назначаес epic'у статус IN_PROGRESS и завершаем метод
         for (TaskStatus status : allEpicSubtasksStatuses) {
@@ -167,23 +171,25 @@ public class TaskManager {
     }
 
     public void updateSubtask(Subtask subtask) {
-        TaskStatus subTaskOldStatus = this.getSubTask(subtask.getId()).getStatus();
 
-        //привязываем по id переданный subtask к эпику старого subtask'a
-        subtask.setEpicId(subtasks.get(subtask.getId()).getEpicId());
+        if (subtasks.containsKey(subtask.getId())) {// проверяем есть ли в хеш-таблицах subtask с таким id
+            //по id переданного task находим id epic содержащего subtask с таким же id
+            int epicId = subtasks.get(subtask.getId()).getEpicId();
 
-        //удаляем старый subtask и кладем в хешмап с epica'ми переданный
-        subtasks.remove(subtask.getId());
-        subtasks.put(subtask.getId(), subtask);
+            if (getEpicSubtasksList(epicId).contains(subtask)) {// если в найденом epic есть такой subtask
+                TaskStatus subTaskOldStatus = this.getSubTask(subtask.getId()).getStatus();
+
+                //привязываем по id переданный subtask к эпику старого subtask'a
+                subtask.setEpicId(subtasks.get(subtask.getId()).getEpicId());
+
+                //удаляем старый subtask и кладем в хешмап с epica'ми переданный
+                subtasks.remove(subtask.getId());
+                subtasks.put(subtask.getId(), subtask);
+
+                this.refreshEpicStatus(subtask.getEpicId());
 
 
-        if (subTaskOldStatus != subtask.getStatus()) {// проверяем другой ли статус в новом subtask'e
-            // если да, то определяем новый статус epic'a
-
-
-            this.refreshEpicStatus(subtask.getEpicId());
-
+            }
         }
-
     }
 }

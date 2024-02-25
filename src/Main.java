@@ -1,52 +1,54 @@
 public class Main {
+    public static TaskManager taskManager = new TaskManager();
+
+    public static void printAll(){
+        System.out.println("------------------------------------------------------------------");
+        System.out.println(taskManager.getTasksList());
+        System.out.println(taskManager.getEpicsList());
+        System.out.println(taskManager.getSubTasksList());
+    }
     public static void main(String[] args) {
 
-        TaskManager taskManager = new TaskManager();
-
-//        Task t1 = new Task("Ремонт", "Отремонтировать телефон");
-//
-//        taskManager.addTask(t1);
-//        System.out.println(taskManager.getTask(t1.getId()).getDescription());
-//
-//
-//        Task t2 = new Task("Ремонт", "Отремонтировать планшет");
-//
-//        taskManager.updateTask(t2);
-//        System.out.println(taskManager.getTask(t2.getId()).getDescription());
 
 
-        Epic e1=new Epic("Попить чай","Отвлечься");
+        Task task1 = new Task("Ремонт", "Отремонтировать телефон");
+        taskManager.addTask(task1);
 
-        Subtask st1 = new Subtask("Вставание","Надо встать");
-        Subtask st2 = new Subtask("Вскипятить воду","Дойти до чайника");
-
-
-        taskManager.addEpic(e1);
-        taskManager.addSubtask(e1.getId(),st1);
-        taskManager.addSubtask(e1.getId(),st2);
-
-        st1.setStatus(TaskStatus.DONE);
-        st2.setStatus(TaskStatus.DONE);
-
-        Subtask st3 = new Subtask(st1.getId(), "Вставание","Надо встать");
-        Subtask st4 = new Subtask(st2.getId(), "Вскипятить воду","Дойти до чайника");
-
-        st3.setStatus(TaskStatus.DONE);
-        st4.setStatus(TaskStatus.DONE);
-
-        taskManager.addSubtask(e1.getId(),st3);
-        taskManager.addSubtask(e1.getId(),st4);
-
-        System.out.println(e1.getStatus());
-
-        Epic e2=new Epic(e1.getId(), "Попить морс","Отвлечься");
+        Task task2 = new Task("Сделать уборку в доме", "Сделать влажную уборку в доме");
+        taskManager.addTask(task2);
 
 
-        taskManager.updateEpic(e2);
+        Epic epic1 = new Epic("Написать песню","Записать инструментальную композицию");
+        taskManager.addEpic(epic1);
+        Subtask subtask1 = new Subtask("Записать ритм-гитару","Сочинить и записать партию ритм-гитары");
+        taskManager.addSubtask(epic1.getId(), subtask1);
+        Subtask subtask2 = new Subtask("Записать бас-гитару","Сочинить и записать партию бас-гитары");
+        taskManager.addSubtask(epic1.getId(), subtask2);
 
-        //System.out.println(taskManager.getEpicSubtasksList(e2.getId()).get(1).getName());
+        Epic epic2=new Epic("Заварить чай","Отвлечься");
+        taskManager.addEpic(epic2);
+        Subtask subtask3 = new Subtask("Заваривание чая","Залить заварку кипятком");
+        taskManager.addSubtask(epic2.getId(), subtask3);
+
+        printAll();
+
+        subtask1.setStatus(TaskStatus.IN_PROGRESS);
+        subtask2.setStatus(TaskStatus.DONE);
+        subtask3.setStatus(TaskStatus.DONE);
+
+        taskManager.updateSubtask(subtask1);
+        taskManager.updateSubtask(subtask2);
+        taskManager.updateSubtask(subtask3);
+
+        printAll();
+
+        taskManager.removeTask(task1.getId());
+        taskManager.removeEpic(epic1.getId());
+
+        printAll();
 
     }
+
 }
 
 
