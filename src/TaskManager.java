@@ -33,12 +33,15 @@ public class TaskManager {
     public void removeAllEpics() {
         this.epics.clear();
     }
+
     public void removeAllSubTasks() {
         this.subtasks.clear();
     }
+
     public void removeTask(int taskId) {
         tasks.remove(taskId);
     }
+
     public void removeEpic(int epicId) {
         epics.remove(epicId);
     }
@@ -62,7 +65,6 @@ public class TaskManager {
             return;
         if (epic.getId() == 0)
             setIdForNewTask(epic);
-
         epics.put(epic.getId(), epic);
     }
 
@@ -91,22 +93,20 @@ public class TaskManager {
     }
 
     public void updateTask(Task task) {
-        if(!tasks.containsKey(task.getId()))
+        if (!tasks.containsKey(task.getId()))
             return;
-
         tasks.remove(task.getId());
         tasks.put(task.getId(), task);
     }
 
     public void updateEpic(Epic epic) {
-        if(!epics.containsKey(epic.getId()))
+        if (!epics.containsKey(epic.getId()))
             return;
         epics.remove(epic.getId());
         epics.put(epic.getId(), epic);
     }
 
     public void updateSubtask(Subtask subtask) {
-
         if (subtasks.containsKey(subtask.getId())) {// проверяем есть ли в хеш-таблицах subtask с таким id
             //по id переданного task находим id epic содержащего subtask с таким же id
             int epicId = subtasks.get(subtask.getId()).getEpicId();
@@ -114,10 +114,8 @@ public class TaskManager {
             if (epics.get(epicId).getSubtasks().contains(subtask)) {// если в найденом epic есть такой subtask
                 //привязываем по id переданный subtask к эпику старого subtask'a
                 subtask.setEpicId(subtasks.get(subtask.getId()).getEpicId());
-
                 epics.get(epicId).removeSubtask(subtask.getId()); //удаляем старый subtask из epic
                 epics.get(epicId).addSubtask(subtask);            //добавляем в epic новый subtask
-
                 //удаляем старый subtask и кладем в хешмап с epica'ми переданный
                 subtasks.remove(subtask.getId());
                 subtasks.put(subtask.getId(), subtask);

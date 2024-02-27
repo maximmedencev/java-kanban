@@ -2,10 +2,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Epic extends Task {
-    private final HashMap<Integer,Subtask> subtasks = new HashMap<>();
+    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
+
     public Epic(String name, String description) {
         super(name, description);
     }
+
     public void removeSubtask(int subtaskId) {
         subtasks.remove(subtaskId);
     }
@@ -17,8 +19,7 @@ public class Epic extends Task {
 
     @Override
     public TaskStatus getStatus() {
-
-        //если есть хоть один статус IN_PROGRESS, назначаес epic'у статус IN_PROGRESS и завершаем метод
+        //если есть хоть один статус IN_PROGRESS, назначаем возвращаем IN_PROGRESS
         for (Subtask subtask : subtasks.values()) {
             if (subtask.getStatus() == TaskStatus.IN_PROGRESS) {
                 return TaskStatus.IN_PROGRESS;
@@ -50,7 +51,7 @@ public class Epic extends Task {
         if (isAllEpicStatusesIsNew) {//  если все статусы NEW(нет статусов DONE)
             return TaskStatus.NEW;
         }
-        //если DONE и NEW  вперемежку назначаем epic'у статус IN_PROGRESS
+        //если DONE и NEW  вперемежку возвращаем статус IN_PROGRESS
         return TaskStatus.IN_PROGRESS;
     }
 
@@ -65,7 +66,6 @@ public class Epic extends Task {
         for (Subtask subtask : subtasks.values()) {
             subtasksIds.add(subtask.getId());
         }
-
         return "Epic{" +
                 "id=" + this.getId() +
                 ", subtasksIds=" + subtasksIds +
