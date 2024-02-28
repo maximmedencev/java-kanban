@@ -17,7 +17,8 @@ public class Main {
                 TaskStatus.NEW);
         taskManager.addTask(task1);
         Task task2 = new Task("Сделать уборку в доме",
-                "Сделать влажную уборку в доме", TaskStatus.NEW);
+                "Сделать влажную уборку в доме",
+                TaskStatus.NEW);
         taskManager.addTask(task2);
         Epic epic1 = new Epic("Написать песню",
                 "Записать инструментальную композицию");
@@ -32,7 +33,9 @@ public class Main {
         taskManager.addSubtask(epic1.getId(), subtask2);
         Epic epic2 = new Epic("Заварить чай", "Отвлечься");
         taskManager.addEpic(epic2);
-        Subtask subtask3 = new Subtask("Заваривание чая", "Залить заварку кипятком", TaskStatus.NEW);
+        Subtask subtask3 = new Subtask("Заваривание чая",
+                "Залить заварку кипятком",
+                TaskStatus.NEW);
         taskManager.addSubtask(epic2.getId(), subtask3);
 
         printAllTasks();
