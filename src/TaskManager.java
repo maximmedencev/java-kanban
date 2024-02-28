@@ -71,7 +71,7 @@ public class TaskManager {
     public void addSubtask(int epicId, Subtask subtask) {
         if (subtask.getId() == 0)
             setIdForNewTask(subtask);
-        epics.get(epicId).addSubtask(subtask);
+        epics.get(epicId).addSubtaskId(subtask.getId());
         subtask.setEpicId(epicId);
         subtasks.put(subtask.getId(), subtask);
     }
@@ -106,19 +106,55 @@ public class TaskManager {
         epics.put(epic.getId(), epic);
     }
 
+
+    public void updateEpicStatus(Epic epic) {
+        TaskStatus newEpicStatus = TaskStatus.IN_PROGRESS;
+        ArrayList<TaskStatus> epicSubtasksStatuses = new ArrayList<>();
+
+        for (Integer subtaskId : epic.getSubtasksIds()) {
+            epicSubtasksStatuses.add(this.subtasks.get(subtaskId).getStatus());
+        }
+        boolean allSubtaskStatusesIsDone = true;
+        boolean allSubtaskStatusesIsNew = true;
+        for (TaskStatus epicSubtaskStatus : epicSubtasksStatuses) {
+
+            if (epicSubtaskStatus == TaskStatus.IN_PROGRESS){
+                allSubtaskStatusesIsNew = false;
+                allSubtaskStatusesIsDone = false;
+                break;
+            }
+            if (epicSubtaskStatus == TaskStatus.NEW)
+                allSubtaskStatusesIsDone = false;
+            if (epicSubtaskStatus == TaskStatus.DONE)
+                allSubtaskStatusesIsNew = false;
+        }
+        if (allSubtaskStatusesIsDone)
+            newEpicStatus = TaskStatus.DONE;
+        if (allSubtaskStatusesIsNew)
+            newEpicStatus = TaskStatus.NEW;
+        int oldEpicId = epic.getId();
+        String oldEpicName = epic.getName();
+        String oldEpicDescription = epic.getDescription();
+        ArrayList<Integer> oldSubtasksIds = epic.getSubtasksIds();
+        Epic newEpic = new Epic(oldEpicId, oldEpicName, oldEpicDescription,newEpicStatus,oldSubtasksIds);
+        updateEpic(newEpic);
+    }
+
+
     public void updateSubtask(Subtask subtask) {
         if (subtasks.containsKey(subtask.getId())) {// проверяем есть ли в хеш-таблицах subtask с таким id
             //по id переданного task находим id epic содержащего subtask с таким же id
             int epicId = subtasks.get(subtask.getId()).getEpicId();
 
-            if (epics.get(epicId).getSubtasks().contains(subtask)) {// если в найденом epic есть такой subtask
+            if (epics.get(epicId).getSubtasksIds().contains(subtask.getId())) {// если в найденом epic есть такой subtask
                 //привязываем по id переданный subtask к эпику старого subtask'a
                 subtask.setEpicId(subtasks.get(subtask.getId()).getEpicId());
                 epics.get(epicId).removeSubtask(subtask.getId()); //удаляем старый subtask из epic
-                epics.get(epicId).addSubtask(subtask);            //добавляем в epic новый subtask
+                epics.get(epicId).addSubtaskId(subtask.getId());            //добавляем в epic новый subtask
                 //удаляем старый subtask и кладем в хешмап с epica'ми переданный
                 subtasks.remove(subtask.getId());
                 subtasks.put(subtask.getId(), subtask);
+                updateEpicStatus(epics.get(subtask.getEpicId()));
             }
         }
     }
