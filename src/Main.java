@@ -13,11 +13,14 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Начало работы программы...");
 
-        Task task1 = new Task("Ремонт", "Отремонтировать телефон", TaskStatus.NEW);
+        Task task1 = new Task("Ремонт", "Отремонтировать телефон",
+                TaskStatus.NEW);
         taskManager.addTask(task1);
-        Task task2 = new Task("Сделать уборку в доме", "Сделать влажную уборку в доме", TaskStatus.NEW);
+        Task task2 = new Task("Сделать уборку в доме",
+                "Сделать влажную уборку в доме", TaskStatus.NEW);
         taskManager.addTask(task2);
-        Epic epic1 = new Epic("Написать песню", "Записать инструментальную композицию");
+        Epic epic1 = new Epic("Написать песню",
+                "Записать инструментальную композицию");
         taskManager.addEpic(epic1);
         Subtask subtask1 = new Subtask("Записать ритм-гитару",
                 "Сочинить и записать партию ритм-гитары",
