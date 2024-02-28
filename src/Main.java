@@ -1,3 +1,5 @@
+import ru.yandex.practicum.tasktracker.*;
+
 public class Main {
     public static TaskManager taskManager = new TaskManager();
 
@@ -19,11 +21,11 @@ public class Main {
         taskManager.addEpic(epic1);
         Subtask subtask1 = new Subtask("Записать ритм-гитару",
                 "Сочинить и записать партию ритм-гитары",
-                TaskStatus.NEW);
+                TaskStatus.DONE);
         taskManager.addSubtask(epic1.getId(), subtask1);
         Subtask subtask2 = new Subtask("Записать бас-гитару",
                 "Сочинить и записать партию бас-гитары",
-                TaskStatus.NEW);
+                TaskStatus.DONE);
         taskManager.addSubtask(epic1.getId(), subtask2);
         Epic epic2 = new Epic("Заварить чай", "Отвлечься");
         taskManager.addEpic(epic2);

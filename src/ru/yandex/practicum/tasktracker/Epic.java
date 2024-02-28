@@ -1,3 +1,5 @@
+package ru.yandex.practicum.tasktracker;
+
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -23,6 +25,9 @@ public class Epic extends Task {
         }
     }
 
+    public void removeAllSubtasksIds(){
+        this.subtasksIds.clear();
+    }
     public ArrayList<Integer> getSubtasksIds() {
         return this.subtasksIds;
     }
@@ -30,7 +35,7 @@ public class Epic extends Task {
     @Override
     public String toString() {
 
-        return "Epic{" +
+        return "ru.yandex.practicum.tasktracker.Epic{" +
                 "id=" + this.getId() +
                 ", subtasksIds=" + subtasksIds +
                 ", name='" + this.getName() + '\'' +

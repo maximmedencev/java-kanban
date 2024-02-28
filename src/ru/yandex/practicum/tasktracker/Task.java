@@ -1,3 +1,5 @@
+package ru.yandex.practicum.tasktracker;
+
 import java.util.Objects;
 
 public class Task {
@@ -70,7 +72,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
+        return "ru.yandex.practicum.tasktracker.Task{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
