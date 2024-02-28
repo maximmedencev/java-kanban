@@ -9,12 +9,6 @@ public class Epic extends Task {
         super(name, description);
     }
 
-    public Epic(int id, String name, String description, TaskStatus status, ArrayList<Integer> subtasksIds) {
-        super(id, name, description, status);
-        this.subtasksIds = subtasksIds;
-        this.status=status;
-    }
-
     public void removeSubtask(Integer subtaskId) {
         subtasksIds.remove(subtaskId);
     }

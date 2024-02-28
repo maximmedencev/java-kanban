@@ -8,7 +8,7 @@ public class TaskManager {
     private final HashMap<Integer, Epic> epics;
     private final HashMap<Integer, Subtask> subtasks;
 
-    private static int newTaskId = 1;
+    private int newTaskId = 1;
 
     public TaskManager() {
         this.tasks = new HashMap<>();
@@ -64,22 +64,16 @@ public class TaskManager {
     }
 
     public void addTask(Task task) {
-        if (tasks.containsValue(task))
-            return;
         setIdForNewTask(task);
         tasks.put(task.getId(), task);
     }
 
     public void addEpic(Epic epic) {
-        if (epics.containsValue(epic))
-            return;
         setIdForNewTask(epic);
         epics.put(epic.getId(), epic);
     }
 
     public void addSubtask(int epicId, Subtask subtask) {
-        if (subtasks.containsValue(subtask))
-            return;
         setIdForNewTask(subtask);
         epics.get(epicId).addSubtaskId(subtask.getId());
         subtask.setEpicId(epicId);
@@ -104,15 +98,13 @@ public class TaskManager {
     }
 
     public void updateTask(Task task) {
-        if (!tasks.containsKey(task.getId()))
-            return;
-        tasks.put(task.getId(), task);
+        if (tasks.containsKey(task.getId()))
+            tasks.put(task.getId(), task);
     }
 
     public void updateEpic(Epic epic) {
-        if (!epics.containsKey(epic.getId()))
-            return;
-        epics.put(epic.getId(), epic);
+        if (epics.containsKey(epic.getId()))
+            epics.put(epic.getId(), epic);
     }
 
     public void updateSubtask(Subtask subtask) {
@@ -144,9 +136,8 @@ public class TaskManager {
         for (TaskStatus epicSubtaskStatus : epicSubtasksStatuses) {
 
             if (epicSubtaskStatus == TaskStatus.IN_PROGRESS) {
-                allSubtaskStatusesIsNew = false;
-                allSubtaskStatusesIsDone = false;
-                break;
+                epic.status = TaskStatus.IN_PROGRESS;
+                return;
             }
             if (epicSubtaskStatus == TaskStatus.NEW)
                 allSubtaskStatusesIsDone = false;
@@ -157,11 +148,8 @@ public class TaskManager {
             newEpicStatus = TaskStatus.DONE;
         if (allSubtaskStatusesIsNew)
             newEpicStatus = TaskStatus.NEW;
-        int oldEpicId = epic.getId();
-        String oldEpicName = epic.getName();
-        String oldEpicDescription = epic.getDescription();
-        ArrayList<Integer> oldSubtasksIds = epic.getSubtasksIds();
-        Epic newEpic = new Epic(oldEpicId, oldEpicName, oldEpicDescription, newEpicStatus, oldSubtasksIds);
-        updateEpic(newEpic);
+
+        epic.status = newEpicStatus;
+        updateEpic(epic);
     }
 }
