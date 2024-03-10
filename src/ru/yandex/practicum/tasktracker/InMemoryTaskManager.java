@@ -2,12 +2,14 @@ package ru.yandex.practicum.tasktracker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> tasks;
     private final HashMap<Integer, Epic> epics;
     private final HashMap<Integer, Subtask> subtasks;
-    private final ArrayList<Integer> history;
+
+    public HistoryManager historyManager = Managers.getDefaultHistory();
 
     private int newTaskId = 1;
 
@@ -15,7 +17,11 @@ public class InMemoryTaskManager implements TaskManager {
         this.tasks = new HashMap<>();
         this.epics = new HashMap<>();
         this.subtasks = new HashMap<>();
-        this.history = new ArrayList<>();
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return this.historyManager.getHistory();
     }
 
     @Override
@@ -48,22 +54,6 @@ public class InMemoryTaskManager implements TaskManager {
         return returnArrayList;
     }
 
-    @Override
-    public ArrayList<Task> getHistory() {
-
-        ArrayList<Task> returnArrayList = new ArrayList<>();
-
-        for (Integer taskId : history) {
-            if (tasks.containsKey(taskId))
-                returnArrayList.add(tasks.get(taskId));
-            if (epics.containsKey(taskId))
-                returnArrayList.add(epics.get(taskId));
-            if (subtasks.containsKey(taskId))
-                returnArrayList.add(subtasks.get(taskId));
-        }
-        return returnArrayList;
-
-    }
 
     @Override
     public void removeAllTasks() {
@@ -127,28 +117,21 @@ public class InMemoryTaskManager implements TaskManager {
         updateEpicStatus(epics.get(epicId));
     }
 
-    private void addToHistory(int id) {
-        if (history.size() == 10) {
-            history.remove(0);
-        }
-        this.history.add(id);
-    }
-
     @Override
     public Task getTask(int id) {
-        addToHistory(id);
+        historyManager.add(tasks.get(id));
         return this.tasks.get(id);
     }
 
     @Override
     public Epic getEpic(int id) {
-        addToHistory(id);
+        historyManager.add(epics.get(id));
         return this.epics.get(id);
     }
 
     @Override
     public Subtask getSubTask(int id) {
-        addToHistory(id);
+        historyManager.add(subtasks.get(id));
         return this.subtasks.get(id);
     }
 

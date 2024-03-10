@@ -59,15 +59,13 @@ public class Main {
 
         //-----Для проверки getHistory()----------------
         inMemoryTaskManager.getEpic(epic2.getId());
-        printAllTasks(inMemoryTaskManager);
-
         for(int i=0; i<9; i++){
             inMemoryTaskManager.getSubTask(subtask3.getId());
         }
+        printAllTasks(inMemoryTaskManager);
 
-        System.out.println("------------------ИСТОРИЯ-------------------");
-        System.out.println(inMemoryTaskManager.getHistory());
-        System.out.println(inMemoryTaskManager.getHistory().size());
+
+
 
 
     }
