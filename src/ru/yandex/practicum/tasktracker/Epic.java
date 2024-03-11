@@ -9,14 +9,30 @@ public class Epic extends Task {
         super(name, description);
     }
 
+    public Epic(Integer id, String name, String description) {
+        super(name, description);
+        this.id = id;
+    }
+
+    public Epic(Epic epic){
+        super(epic.name,epic.description);
+        this.id= epic.id;
+        subtasksIds.addAll(epic.getSubtasksIds());
+    }
+
+
     public void removeSubtask(Integer subtaskId) {
         subtasksIds.remove(subtaskId);
     }
 
-    public void addSubtaskId(Integer subtaskId) {
-        if (!this.subtasksIds.contains(subtaskId)) {
+    public int addSubtaskId(Integer subtaskId) {
+        if (subtaskId == this.id)
+            return -1;
+
+        if (!this.subtasksIds.contains(subtaskId))
             this.subtasksIds.add(subtaskId);
-        }
+
+        return 0;
     }
 
     public void removeAllSubtasksIds() {

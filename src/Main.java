@@ -1,9 +1,7 @@
 import ru.yandex.practicum.tasktracker.*;
 
 public class Main {
-    public static Managers managers = new Managers();
-    public static TaskManager inMemoryTaskManager = managers.getDefault();
-
+    public static TaskManager inMemoryTaskManager;
     private static void printAllTasks(TaskManager manager) {
         System.out.println("Задачи:");
         for (Task task : manager.getTasksList()) {
@@ -13,12 +11,12 @@ public class Main {
         for (Task epic : manager.getEpicsList()) {
             System.out.println(epic);
 
-            for (Task task : manager.getEpicSubTaskList(epic.getId())) {
+            for (Task task : manager.getEpicSubtaskList(epic.getId())) {
                 System.out.println("--> " + task);
             }
         }
         System.out.println("Подзадачи:");
-        for (Task subtask : manager.getSubTasksList()) {
+        for (Task subtask : manager.getSubtasksList()) {
             System.out.println(subtask);
         }
 
@@ -29,6 +27,8 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        inMemoryTaskManager = Managers.getDefault();
+
         System.out.println("Начало работы программы...");
 
         Task task1 = new Task("Ремонт", "Отремонтировать телефон",
@@ -60,13 +60,12 @@ public class Main {
         //-----Для проверки getHistory()----------------
         inMemoryTaskManager.getEpic(epic2.getId());
         for(int i=0; i<9; i++){
-            inMemoryTaskManager.getSubTask(subtask3.getId());
+            //subtask3.setDescription(subtask3.getDescription()+"1");
+            //inMemoryTaskManager.getSubtask(subtask3.getId());
+            inMemoryTaskManager.getEpic(epic2.getId());
         }
+
         printAllTasks(inMemoryTaskManager);
-
-
-
-
 
     }
 }

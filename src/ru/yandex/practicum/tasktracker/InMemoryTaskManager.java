@@ -35,13 +35,13 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getSubTasksList() {
+    public ArrayList<Task> getSubtasksList() {
         return new ArrayList<>(this.subtasks.values());
     }
 
 
     @Override
-    public ArrayList<Task> getEpicSubTaskList(int id) {
+    public ArrayList<Task> getEpicSubtaskList(int id) {
         ArrayList<Task> returnArrayList = new ArrayList<>();
 
         for (Subtask subtask : this.subtasks.values()) {
@@ -63,11 +63,11 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void removeAllEpics() {
         this.epics.clear();
-        this.removeAllSubTasks();
+        this.removeAllSubtasks();
     }
 
     @Override
-    public void removeAllSubTasks() {
+    public void removeAllSubtasks() {
         this.subtasks.clear();
         for (Epic epic : epics.values()) {
             epic.removeAllSubtasksIds();
@@ -118,6 +118,41 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    public int addTask(int id, Task task) {
+        if (tasks.containsKey(id))
+            return -1;
+        task.setId(id);
+        tasks.put(id, task);
+        return 0;
+    }
+
+    @Override
+    public int addEpic(int id, Epic epic) {
+        if (epics.containsKey(id))
+            return -1;
+
+        epic.setId(id);
+        epics.put(id, epic);
+
+        return 0;
+    }
+
+    @Override
+    public int addSubtask(int id, int epicId, Subtask subtask) {
+        if (subtasks.containsKey(id))
+            return -1;
+
+        subtask.setId(id);
+
+        epics.get(epicId).addSubtaskId(subtask.getId());
+        subtask.setEpicId(epicId);
+        subtasks.put(subtask.getId(), subtask);
+        updateEpicStatus(epics.get(epicId));
+        return 0;
+
+    }
+
+    @Override
     public Task getTask(int id) {
         historyManager.add(tasks.get(id));
         return this.tasks.get(id);
@@ -130,7 +165,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Subtask getSubTask(int id) {
+    public Subtask getSubtask(int id) {
         historyManager.add(subtasks.get(id));
         return this.subtasks.get(id);
     }
