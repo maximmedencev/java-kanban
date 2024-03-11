@@ -10,7 +10,7 @@ class TaskTest {
     //экземпляры класса Task равны друг другу, если равен их id;
     @Test
     public void tasksEqualsIfIdsEquals(){
-        Integer id = 1;
+        int id = 1;
         Task task1 = new Task(id,"Name1","Description1", TaskStatus.NEW);
         Task task2 = new Task(id,"Name2","Description2", TaskStatus.NEW);
 

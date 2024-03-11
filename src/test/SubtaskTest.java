@@ -11,7 +11,7 @@ class SubtaskTest {
     //наследники класса Task равны друг другу, если равен их id
     @Test
     public void tasksEqualsIfIdsEquals() {
-        Integer id = 1;
+        int id = 1;
         Subtask subtask1 = new Subtask(id, "Name1", "Description1", TaskStatus.NEW);
         Subtask subtask2 = new Subtask(id, "Name2", "Description2", TaskStatus.NEW);
 
