@@ -60,8 +60,6 @@ public class Main {
         //-----Для проверки getHistory()----------------
         inMemoryTaskManager.getEpic(epic2.getId());
         for(int i=0; i<9; i++){
-            //subtask3.setDescription(subtask3.getDescription()+"1");
-            //inMemoryTaskManager.getSubtask(subtask3.getId());
             inMemoryTaskManager.getEpic(epic2.getId());
         }
 
