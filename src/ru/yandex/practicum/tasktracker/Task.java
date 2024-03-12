@@ -8,22 +8,11 @@ public class Task {
     protected String description;
     protected TaskStatus status;
 
-    public Task(Task task) {
-        this.id = task.id;
-        this.name = task.name;
-        this.description = task.description;
-        this.status = task.status;
-    }
-
     public Task(String name, String description, TaskStatus status) {
         this.name = name;
         this.description = description;
         this.status = status;
         this.id = 0;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Task(String name, String description) {
@@ -54,6 +43,10 @@ public class Task {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public TaskStatus getStatus() {

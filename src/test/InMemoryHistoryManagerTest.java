@@ -24,13 +24,10 @@ class InMemoryHistoryManagerTest {
         inMemoryTaskManager.addTask(1, task1);
         inMemoryTaskManager.getTask(1);
         Assertions.assertEquals(description, inMemoryTaskManager.getHistory().get(0).getDescription(),
-                "предидущая версия объекта не соотвествет новому объекту, хотя изменений полей не было");
+                "предыдущая версия объекта не соотвествет новому объекту, хотя изменений полей не было");
         task1.setDescription("New description");
         inMemoryTaskManager.getTask(1);
         Assertions.assertNotEquals(description, inMemoryTaskManager.getHistory().get(1).getDescription(),
                 "Последний объект в истории совпадает с новым, хотя были изменения");
-
     }
-
-
 }

@@ -87,9 +87,17 @@ class InMemoryTaskManagerTest {
     @Test
     public void taskFieldsShouldBeSameAfterAddingToTaskManager() {
         Task task1 = new Task(1, "Name1", "Description1", TaskStatus.NEW);
-        Task task2 = new Task(task1);
+        int id = task1.getId();
+        String name = task1.getName();
+        String description = task1.getDescription();
+        TaskStatus taskStatus = task1.getStatus();
         inMemoryTaskManager.addTask(1, task1);
-        Assertions.assertEquals(task2, task1, "Значения полей различаются");
+        Assertions.assertEquals(id, task1.getId(), "Значения полей различаются");
+        Assertions.assertEquals(name, task1.getName(), "Значения полей различаются");
+        Assertions.assertEquals(description, task1.getDescription(), "Значения полей различаются");
+        Assertions.assertEquals(taskStatus, task1.getStatus(), "Значения полей различаются");
+
+
     }
 
     //тест, в котором проверяется неизменность задачи (по всем полям) при добавлении задачи в менеджер

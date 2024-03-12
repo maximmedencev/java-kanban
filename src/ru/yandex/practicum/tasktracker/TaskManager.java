@@ -40,7 +40,7 @@ public interface TaskManager {
     Epic getEpic(int id);
 
     Subtask getSubtask(int id);
-    ArrayList<Task> getEpicSubtaskList(int id);
+    List<Task> getEpicSubtaskList(int id);
 
     void updateTask(Task task);
 
