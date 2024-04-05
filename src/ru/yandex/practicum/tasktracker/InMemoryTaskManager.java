@@ -222,16 +222,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubtask(Subtask subtask) {
-        if (subtasks.containsKey(subtask.getId())) {// проверяем есть ли в хеш-таблицах subtask с таким id
-            //по id переданного task находим id epic содержащего subtask с таким же id
+        if (subtasks.containsKey(subtask.getId())) {
             int epicId = subtasks.get(subtask.getId()).getEpicId();
 
-            if (epics.get(epicId).getSubtasksIds().contains(subtask.getId())) {// если в найденом epic есть такой subtask
-                //привязываем по id переданный subtask к эпику старого subtask'a
+            if (epics.get(epicId).getSubtasksIds().contains(subtask.getId())) {
                 subtask.setEpicId(epicId);
-                epics.get(epicId).removeSubtask(subtask.getId()); //удаляем старый subtask из epic
-                epics.get(epicId).addSubtaskId(subtask.getId());  //добавляем в epic новый subtask
-                //удаляем старый subtask и кладем в хешмап с epica'ми переданный
+                epics.get(epicId).removeSubtask(subtask.getId());
+                epics.get(epicId).addSubtaskId(subtask.getId());
                 subtasks.put(subtask.getId(), subtask);
                 updateEpicStatus(epics.get(subtask.getEpicId()));
             }
