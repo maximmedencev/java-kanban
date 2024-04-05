@@ -1,4 +1,4 @@
-package test;
+package ru.yandex.practicum.tasktracker;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,6 +24,5 @@ class EpicTest {
         Assertions.assertEquals(-1, epic1.addSubtaskId(epic1.getId()),
                 "Эпик добавлен как своя подзадача");
     }
-
 
 }

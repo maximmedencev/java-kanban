@@ -1,4 +1,4 @@
-package test;
+package ru.yandex.practicum.tasktracker;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -121,6 +121,25 @@ class InMemoryTaskManagerTest {
         Assertions.assertEquals(subtask2, subtask1, "Значения полей различаются");
         Assertions.assertEquals(subtask2.getEpicId(), subtask1.getEpicId(), "Значения полей различаются");
 
+    }
+
+    @Test
+    public void shouldNotBeNotActualSubtasksIdsAfterRemoving(){
+        Epic epic1 = new Epic("Name1", "Description1");
+        inMemoryTaskManager.addEpic(1, epic1);
+        Subtask subtask1 = new Subtask(2, 1, "Name2", "Description2", TaskStatus.NEW);
+        Subtask subtask2 = new Subtask(3, 1, "Name3", "Description3", TaskStatus.NEW);
+        Subtask subtask3 = new Subtask(4, 1, "Name4", "Description4", TaskStatus.NEW);
+
+        inMemoryTaskManager.addSubtask(subtask1.getId(), 1, subtask1);
+        inMemoryTaskManager.addSubtask(subtask2.getId(), 1, subtask2);
+        inMemoryTaskManager.addSubtask(subtask3.getId(), 1, subtask3);
+
+        inMemoryTaskManager.removeSubtask(3);
+        inMemoryTaskManager.removeSubtask(4);
+
+        Assertions.assertFalse(inMemoryTaskManager.getEpic(1).getSubtasksIds().contains(3));
+        Assertions.assertFalse(inMemoryTaskManager.getEpic(1).getSubtasksIds().contains(4));
     }
 
 }
