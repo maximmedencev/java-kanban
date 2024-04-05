@@ -2,6 +2,7 @@ import ru.yandex.practicum.tasktracker.*;
 
 public class Main {
     public static TaskManager inMemoryTaskManager;
+
     private static void printAllTasks(TaskManager manager) {
         System.out.println("Задачи:");
         for (Task task : manager.getTasksList()) {
@@ -49,19 +50,28 @@ public class Main {
                 "Сочинить и записать партию бас-гитары",
                 TaskStatus.DONE);
         inMemoryTaskManager.addSubtask(epic1.getId(), subtask2);
+        Subtask subtask3 = new Subtask("Записать ударные",
+                "Сочинить и записать партию ударных",
+                TaskStatus.DONE);
+        inMemoryTaskManager.addSubtask(epic1.getId(), subtask3);
+
         Epic epic2 = new Epic("Заварить чай", "Отвлечься");
         inMemoryTaskManager.addEpic(epic2);
-        Subtask subtask3 = new Subtask("Заваривание чая",
-                "Залить заварку кипятком",
-                TaskStatus.NEW);
-        inMemoryTaskManager.addSubtask(epic2.getId(), subtask3);
 
-
-        //-----Для проверки getHistory()----------------
+        //запрос задач с повторами(в историю сохраняется последний запрос)
+        inMemoryTaskManager.getTask(task1.getId());
+        inMemoryTaskManager.getEpic(epic1.getId());
+        inMemoryTaskManager.getTask(task2.getId());
+        inMemoryTaskManager.getSubtask(subtask3.getId());
+        inMemoryTaskManager.getTask(task2.getId());
+        inMemoryTaskManager.getSubtask(subtask1.getId());
         inMemoryTaskManager.getEpic(epic2.getId());
-        for(int i=0; i<9; i++){
-            inMemoryTaskManager.getEpic(epic2.getId());
-        }
+        inMemoryTaskManager.getEpic(epic2.getId());
+
+        printAllTasks(inMemoryTaskManager);
+
+        inMemoryTaskManager.removeTask(task2.getId());
+        inMemoryTaskManager.removeEpic(epic1.getId());
 
         printAllTasks(inMemoryTaskManager);
 
