@@ -14,9 +14,9 @@ public class Epic extends Task {
         this.id = id;
     }
 
-    public Epic(Epic epic){
-        super(epic.name,epic.description);
-        this.id= epic.id;
+    public Epic(Epic epic) {
+        super(epic.name, epic.description);
+        this.id = epic.id;
         subtasksIds.addAll(epic.getSubtasksIds());
     }
 
