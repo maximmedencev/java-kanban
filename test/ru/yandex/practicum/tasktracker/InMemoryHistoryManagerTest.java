@@ -7,14 +7,13 @@ import org.junit.jupiter.api.Test;
 class InMemoryHistoryManagerTest {
     public static TaskManager inMemoryTaskManager;
 
-    public static boolean taskFieldsEquals(Task task1, Task task2){
-        if(task1.getId()==task2.getId())
-            if(task1.getName().equals(task2.getName()))
-                if(task1.getDescription().equals(task2.getDescription()))
-                    if(task1.getStatus().equals(task2.getStatus()))
-                        return true;
-        return false;
+    public static boolean taskFieldsEquals(Task task1, Task task2) {
+        return (task1.getId() == task2.getId())
+                && (task1.getName().equals(task2.getName()))
+                && (task1.getDescription().equals(task2.getDescription()))
+                && (task1.getStatus().equals(task2.getStatus()));
     }
+
     @BeforeEach
     public void beforeEach() {
         inMemoryTaskManager = Managers.getDefault();
@@ -70,8 +69,9 @@ class InMemoryHistoryManagerTest {
         inMemoryTaskManager.removeTask(task1.getId());
         Assertions.assertEquals(0, inMemoryTaskManager.getHistory().size(), "Задача не удалена!");
     }
+
     @Test
-    public void tasksShouldHaveSameFieldsAfterRemovingFromMiddleOfHistoryList(){
+    public void tasksShouldHaveSameFieldsAfterRemovingFromMiddleOfHistoryList() {
         Task task1 = new Task(1, "Name1", "Description1", TaskStatus.NEW);
         Task task2 = new Task(2, "Name2", "Description2", TaskStatus.NEW);
         Task task3 = new Task(3, "Name3", "Description3", TaskStatus.NEW);
@@ -85,13 +85,13 @@ class InMemoryHistoryManagerTest {
 
         inMemoryTaskManager.removeTask(task2.getId());
 
-        Assertions.assertTrue(taskFieldsEquals(task1,inMemoryTaskManager.getHistory().get(0)),"Оставшиеся объекты не совпадают после удаления из середины списка");
-        Assertions.assertTrue(taskFieldsEquals(task3,inMemoryTaskManager.getHistory().get(1)),"Оставшиеся Объекты не совпадают после удаления из середины списка");
+        Assertions.assertTrue(taskFieldsEquals(task1, inMemoryTaskManager.getHistory().get(0)), "Оставшиеся объекты не совпадают после удаления из середины списка");
+        Assertions.assertTrue(taskFieldsEquals(task3, inMemoryTaskManager.getHistory().get(1)), "Оставшиеся Объекты не совпадают после удаления из середины списка");
     }
 
 
     @Test
-    public void tasksShouldHaveSameFieldsAfterRemovingFromHistoryListTail(){
+    public void tasksShouldHaveSameFieldsAfterRemovingFromHistoryListTail() {
         Task task1 = new Task(1, "Name1", "Description1", TaskStatus.NEW);
         Task task2 = new Task(2, "Name2", "Description2", TaskStatus.NEW);
         Task task3 = new Task(3, "Name3", "Description3", TaskStatus.NEW);
@@ -105,15 +105,15 @@ class InMemoryHistoryManagerTest {
 
         inMemoryTaskManager.removeTask(task3.getId());
 
-        Assertions.assertTrue(taskFieldsEquals(task1,inMemoryTaskManager.getHistory().get(0)),"Оставшиеся Объекты не совпадают после удаления головы списка");
-        Assertions.assertTrue(taskFieldsEquals(task2,inMemoryTaskManager.getHistory().get(1)),"ОСтавшиеся Объекты не совпадают после удаления головы списка");
-        Assertions.assertEquals(2, inMemoryTaskManager.getHistory().size(),"В списке должно быть две задачи");
+        Assertions.assertTrue(taskFieldsEquals(task1, inMemoryTaskManager.getHistory().get(0)), "Оставшиеся Объекты не совпадают после удаления головы списка");
+        Assertions.assertTrue(taskFieldsEquals(task2, inMemoryTaskManager.getHistory().get(1)), "ОСтавшиеся Объекты не совпадают после удаления головы списка");
+        Assertions.assertEquals(2, inMemoryTaskManager.getHistory().size(), "В списке должно быть две задачи");
 
     }
 
 
     @Test
-    public void tasksShouldHaveSameFieldsAfterRemovingFromHistoryListHead(){
+    public void tasksShouldHaveSameFieldsAfterRemovingFromHistoryListHead() {
         Task task1 = new Task(1, "Name1", "Description1", TaskStatus.NEW);
         Task task2 = new Task(2, "Name2", "Description2", TaskStatus.NEW);
         Task task3 = new Task(3, "Name3", "Description3", TaskStatus.NEW);
@@ -127,11 +127,12 @@ class InMemoryHistoryManagerTest {
 
         inMemoryTaskManager.removeTask(task1.getId());
 
-        Assertions.assertTrue(taskFieldsEquals(task2,inMemoryTaskManager.getHistory().get(0)),"Оставшиеся Объекты не совпадают после удаления головы списка");
-        Assertions.assertTrue(taskFieldsEquals(task3,inMemoryTaskManager.getHistory().get(1)),"ОСтавшиеся Объекты не совпадают после удаления головы списка");
-        Assertions.assertEquals(2, inMemoryTaskManager.getHistory().size(),"В списке должно быть две задачи");
+        Assertions.assertTrue(taskFieldsEquals(task2, inMemoryTaskManager.getHistory().get(0)), "Оставшиеся Объекты не совпадают после удаления головы списка");
+        Assertions.assertTrue(taskFieldsEquals(task3, inMemoryTaskManager.getHistory().get(1)), "ОСтавшиеся Объекты не совпадают после удаления головы списка");
+        Assertions.assertEquals(2, inMemoryTaskManager.getHistory().size(), "В списке должно быть две задачи");
 
     }
+
     @Test
     public void taskShouldBeInHistoryListAfterAdd() {
         HistoryManager historyManager = new InMemoryHistoryManager();

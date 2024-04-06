@@ -8,7 +8,6 @@ import java.util.Map;
 public class InMemoryHistoryManager implements HistoryManager {
     private Node head;
     private Node tail;
-    private int size = 0;
     private final Map<Integer, Node> history = new HashMap<>();
 
     private void linkLast(Task task) {
@@ -18,42 +17,30 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (oldTail == null)
             head = newNode;
         else
-            oldTail.next = newNode;
-        size++;
+            oldTail.setNext(newNode);
     }
 
     private void removeNode(Node node) {
 
-        if (node == null || size == 0)
+        if (node == null || history.isEmpty())
             return;
 
-        if (size == 1) {
-            head = null;
-            tail = null;
-            size = 0;
-            return;
+        final Node next = node.getNext();
+        final Node prev = node.getPrev();
+
+        if (prev == null) {
+            head = next;
+        } else {
+            prev.setNext(next);
+            node.setNext(null);
         }
 
-        if (node == head) {
-            head = head.next;
-            head.prev = null;
-            node = null;
-            size--;
-            return;
+        if (next == null) {
+            tail = prev;
+        } else {
+            next.setPrev(prev);
+            node.setNext(null);
         }
-
-        if (node == tail) {
-            tail = tail.prev;
-            tail.next = null;
-            node = null;
-            size--;
-            return;
-        }
-
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
-        node = null;
-        size--;
 
     }
 
@@ -78,8 +65,8 @@ public class InMemoryHistoryManager implements HistoryManager {
         List<Task> listToReturn = new ArrayList<>();
         Node currentNode = head;
         while (currentNode != null) {
-            listToReturn.add(currentNode.data);
-            currentNode = currentNode.next;
+            listToReturn.add(currentNode.getData());
+            currentNode = currentNode.getNext();
         }
 
         return listToReturn;
