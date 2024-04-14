@@ -4,5 +4,9 @@ import java.util.List;
 
 public interface HistoryManager {
     void add(Task task);//должен помечать задачи как просмотренные
-    List<Task> getHistory(); // возвращать их список просмотренных задач
+
+    void remove(int id);
+
+    List<Task> getHistory(); // возвращать список просмотренных задач
+
 }
