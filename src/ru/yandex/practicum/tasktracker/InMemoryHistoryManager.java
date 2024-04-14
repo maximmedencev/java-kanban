@@ -10,6 +10,16 @@ public class InMemoryHistoryManager implements HistoryManager {
     private Node tail;
     private final Map<Integer, Node> history = new HashMap<>();
 
+    static String historyToString(HistoryManager manager){
+
+        return null;
+    }
+    static List<Integer> historyFromString(String value){
+
+        return null;
+    }
+
+
     private void linkLast(Task task) {
         final Node oldTail = tail;
         final Node newNode = new Node(oldTail, task, null);
