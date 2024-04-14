@@ -12,7 +12,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     public HistoryManager historyManager = Managers.getDefaultHistory();
 
-    private int newTaskId = 1;
+    protected int newTaskId = 1;
 
     public InMemoryTaskManager() {
         this.tasks = new HashMap<>();
