@@ -11,8 +11,7 @@ public class Managers {
         return new InMemoryTaskManager();
     }
 
-    public static FileBackedTaskManager loadFromFile(File file){
-        return  new FileBackedTaskManager(file);
-
+    public static FileBackedTaskManager loadFromFile(File file) {
+        return new FileBackedTaskManager(file);
     }
 }
