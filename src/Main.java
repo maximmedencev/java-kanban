@@ -1,6 +1,4 @@
-import ru.yandex.practicum.tasktracker.Managers;
-import ru.yandex.practicum.tasktracker.Task;
-import ru.yandex.practicum.tasktracker.TaskManager;
+import ru.yandex.practicum.tasktracker.*;
 
 import java.io.File;
 
@@ -33,7 +31,7 @@ public class Main {
 
     public static void main(String[] args) {
         File file = new File("java-kanban-save.csv");
-        fileBackedTaskManager = Managers.loadFromFile(file);
+        fileBackedTaskManager = FileBackedTaskManager.loadFromFile(file);
         System.out.println("Начало работы программы...");
         printAllTasks(fileBackedTaskManager);
     }

@@ -13,6 +13,10 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         load();
     }
 
+    public static FileBackedTaskManager loadFromFile(File file) {
+        return new FileBackedTaskManager(file);
+    }
+
     private void load() {
         String saveData;
         if (saveFile.exists() && !saveFile.isDirectory()) {
@@ -67,27 +71,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
-    @Override
-    public int addTask(int id, Task task) {
-        super.addTask(id, task);
-        save();
-        return 0;
-    }
-
-    @Override
-    public int addEpic(int id, Epic epic) {
-        super.addEpic(id, epic);
-        save();
-        return 0;
-    }
-
-    @Override
-    public int addSubtask(int id, int epicId, Subtask subtask) {
-        super.addSubtask(id, epicId, subtask);
-        save();
-        return 0;
-    }
-
     private void save() {
         try (FileWriter writer = new FileWriter(saveFile.getAbsolutePath())) {
             writer.write("id,type,name,status,description,epic\n");
@@ -109,49 +92,46 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-    private String toString(Task task) {
-
-        if (task.getClass() == Epic.class) {
-            return task.getId() +
-                    "," + TaskTypes.EPIC +
-                    "," + task.getName() +
-                    "," + task.getStatus() +
-                    "," + task.getDescription() +
-                    ",\n";
+    protected static String toString(Task task) {
+        switch (task.getClass().toString()) {
+            case "class ru.yandex.practicum.tasktracker.Epic":
+                return task.getId() +
+                        "," + TaskType.EPIC +
+                        "," + task.getName() +
+                        "," + task.getStatus() +
+                        "," + task.getDescription() +
+                        ",\n";
+            case "class ru.yandex.practicum.tasktracker.Subtask":
+                return task.getId() +
+                        "," + TaskType.SUBTASK +
+                        "," + task.getName() +
+                        "," + task.getStatus() +
+                        "," + task.getDescription() +
+                        "," + ((Subtask) task).getEpicId() +
+                        ",\n";
         }
-
-        if (task.getClass() == Subtask.class) {
-            return task.getId() +
-                    "," + TaskTypes.SUBTASK +
-                    "," + task.getName() +
-                    "," + task.getStatus() +
-                    "," + task.getDescription() +
-                    "," + ((Subtask) task).getEpicId() +
-                    ",\n";
-        }
-
         return task.getId() +
-                "," + TaskTypes.TASK +
+                "," + TaskType.TASK +
                 "," + task.getName() +
                 "," + task.getStatus() +
                 "," + task.getDescription() +
                 ",\n";
     }
 
-    private Task fromString(String value) {
+    protected static Task fromString(String value) {
         String[] valueElements = value.split(",");
         int epicId;
         int id = Integer.parseInt(valueElements[0]);
-        TaskTypes type = TaskTypes.valueOf(valueElements[1]);
+        TaskType type = TaskType.valueOf(valueElements[1]);
         String name = valueElements[2];
         TaskStatus status = TaskStatus.valueOf(valueElements[3]);
         String description = valueElements[4];
 
-        if (type == TaskTypes.EPIC) {
+        if (type == TaskType.EPIC) {
             return new Epic(id, name, description);
         }
 
-        if (type == TaskTypes.SUBTASK) {
+        if (type == TaskType.SUBTASK) {
             epicId = Integer.parseInt(valueElements[5]);
             return new Subtask(id, epicId, name, description, status);
         }

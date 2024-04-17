@@ -8,58 +8,29 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Arrays;
 
 public class FileBackedTaskManagerTest {
     FileBackedTaskManager fileBackedTaskManager;
     File saveFile;
 
     @BeforeEach
-    public void beforeEach() {
-        try {
-            saveFile = File.createTempFile("java-kanban-save-test", ".csv");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static Task fromString(String value) {
-        String[] valueElements = value.split(",");
-        int epicId;
-        int id = Integer.parseInt(valueElements[0]);
-        TaskTypes type = TaskTypes.valueOf(valueElements[1]);
-        String name = valueElements[2];
-        TaskStatus status = TaskStatus.valueOf(valueElements[3]);
-        String description = valueElements[4];
-
-        if (type == TaskTypes.EPIC) {
-            return new Epic(id, name, description);
-        }
-
-        if (type == TaskTypes.SUBTASK) {
-            epicId = Integer.parseInt(valueElements[5]);
-            return new Subtask(id, epicId, name, description, status);
-        }
-        return new Task(id, name, description, status);
+    public void beforeEach() throws IOException {
+        saveFile = File.createTempFile("java-kanban-save-test", ".csv");
     }
 
     @Test
     public void taskListsShouldBeEmptyForEmptySaveFile() {
-        fileBackedTaskManager = Managers.loadFromFile(saveFile);
+        fileBackedTaskManager = FileBackedTaskManager.loadFromFile(saveFile);
         Assertions.assertTrue(fileBackedTaskManager.getTasksList().isEmpty(), "Список задач не пустой!");
         Assertions.assertTrue(fileBackedTaskManager.getEpicsList().isEmpty(), "Список эпиков не пустой!");
         Assertions.assertTrue(fileBackedTaskManager.getSubtasksList().isEmpty(), "Список подзадач не пустой!");
     }
 
     @Test
-    public void fileShouldBeEmptyForEmptyTaskLists() {
-        fileBackedTaskManager = Managers.loadFromFile(saveFile);
+    public void fileShouldBeEmptyForEmptyTaskLists() throws IOException {
+        fileBackedTaskManager = FileBackedTaskManager.loadFromFile(saveFile);
         String saveData;
-        try {
-            saveData = Files.readString(saveFile.toPath());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        saveData = Files.readString(saveFile.toPath());
         Assertions.assertTrue(saveData.isEmpty());
     }
 
@@ -82,7 +53,7 @@ public class FileBackedTaskManagerTest {
             throw new RuntimeException(e);
         }
 
-        fileBackedTaskManager = Managers.loadFromFile(saveFile);
+        fileBackedTaskManager = FileBackedTaskManager.loadFromFile(saveFile);
         String saveData;
 
         try {
@@ -97,12 +68,12 @@ public class FileBackedTaskManagerTest {
                 String[] valueElements = saveDataArray[i].split(",");
                 int epicId;
                 int id = Integer.parseInt(valueElements[0]);
-                TaskTypes type = TaskTypes.valueOf(valueElements[1]);
+                TaskType type = TaskType.valueOf(valueElements[1]);
                 String name = valueElements[2];
                 TaskStatus status = TaskStatus.valueOf(valueElements[3]);
                 String description = valueElements[4];
 
-                if (type == TaskTypes.TASK) {
+                if (type == TaskType.TASK) {
                     Assertions.assertEquals(id, fileBackedTaskManager.
                             tasks.get(id).getId(), "task.id не совпадают");
                     Assertions.assertEquals(name, fileBackedTaskManager.
@@ -113,7 +84,7 @@ public class FileBackedTaskManagerTest {
                             tasks.get(id).getStatus(), "task.status не совпадают");
                 }
 
-                if (type == TaskTypes.EPIC) {
+                if (type == TaskType.EPIC) {
                     Assertions.assertEquals(id, fileBackedTaskManager.
                             epics.get(id).getId(), "epic.id не совпадают");
                     Assertions.assertEquals(name, fileBackedTaskManager.
@@ -124,7 +95,7 @@ public class FileBackedTaskManagerTest {
                             epics.get(id).getStatus(), "epic.status не совпадают");
                 }
 
-                if (type == TaskTypes.SUBTASK) {
+                if (type == TaskType.SUBTASK) {
                     epicId = Integer.parseInt(valueElements[5]);
                     Assertions.assertEquals(id, fileBackedTaskManager.
                             subtasks.get(id).getId(), "id не совпадают");
@@ -143,7 +114,7 @@ public class FileBackedTaskManagerTest {
 
     @Test
     public void fileAndTaskListsShouldHaveSameDataAfterSave() {
-        fileBackedTaskManager = Managers.loadFromFile(saveFile);
+        fileBackedTaskManager = FileBackedTaskManager.loadFromFile(saveFile);
         Epic epic1 = new Epic("Тестовый эпик №1",
                 "Описание эпик №1");
         fileBackedTaskManager.addEpic(epic1);
@@ -168,13 +139,10 @@ public class FileBackedTaskManagerTest {
                 throw new RuntimeException(e);
             }
 
-            System.out.println(fileBackedTaskManager.epics);
-
             if (!saveData.isEmpty()) {
                 String[] saveDataArray = saveData.split("\n");
-                System.out.println(Arrays.toString(saveDataArray));
                 for (int i = 1; i < saveDataArray.length; i++) {
-                    Task task = fromString(saveDataArray[i]);
+                    Task task = FileBackedTaskManager.fromString(saveDataArray[i]);
                     if (task.getClass() == Epic.class) {
                         Assertions.assertEquals(task.getId(), fileBackedTaskManager.
                                 epics.get(task.getId()).getId(), "epic.id не совпадают");
