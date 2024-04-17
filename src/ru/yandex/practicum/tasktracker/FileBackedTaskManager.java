@@ -93,15 +93,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     protected static String toString(Task task) {
-        switch (task.getClass().toString()) {
-            case "class ru.yandex.practicum.tasktracker.Epic":
+        switch (task.getClass().getName()) {
+            case "ru.yandex.practicum.tasktracker.Epic":
                 return task.getId() +
                         "," + TaskType.EPIC +
                         "," + task.getName() +
                         "," + task.getStatus() +
                         "," + task.getDescription() +
                         ",\n";
-            case "class ru.yandex.practicum.tasktracker.Subtask":
+            case "ru.yandex.practicum.tasktracker.Subtask":
                 return task.getId() +
                         "," + TaskType.SUBTASK +
                         "," + task.getName() +
@@ -109,13 +109,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         "," + task.getDescription() +
                         "," + ((Subtask) task).getEpicId() +
                         ",\n";
+            case "ru.yandex.practicum.tasktracker.Task":
+                return task.getId() +
+                        "," + TaskType.TASK +
+                        "," + task.getName() +
+                        "," + task.getStatus() +
+                        "," + task.getDescription() +
+                        ",\n";
         }
-        return task.getId() +
-                "," + TaskType.TASK +
-                "," + task.getName() +
-                "," + task.getStatus() +
-                "," + task.getDescription() +
-                ",\n";
+
+        return null;
     }
 
     protected static Task fromString(String value) {

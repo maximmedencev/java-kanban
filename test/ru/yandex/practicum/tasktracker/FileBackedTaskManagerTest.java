@@ -35,7 +35,7 @@ public class FileBackedTaskManagerTest {
     }
 
     @Test
-    public void fileAndTaskListsShouldHaveSameDataAfterLoad() {
+    public void fileAndTaskListsShouldHaveSameDataAfterLoad() throws IOException {
         String data =
                 "id,type,name,status,description,epic\n" +
                         "1,TASK,Имя таска 1,NEW,Описание таска 1,\n" +
@@ -47,21 +47,12 @@ public class FileBackedTaskManagerTest {
                         "5,SUBTASK,Имя сабтаска 2,DONE,Описание сабтаска 2,3\n" +
                         "6,SUBTASK,Имя сабтаска 3,NEW,Описание сабтаска 3,7";
 
-        try (FileWriter writer = new FileWriter(saveFile.getAbsolutePath())) {
-            writer.write(data);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        FileWriter writer = new FileWriter(saveFile.getAbsolutePath());
+        writer.write(data);
 
         fileBackedTaskManager = FileBackedTaskManager.loadFromFile(saveFile);
         String saveData;
-
-        try {
-            saveData = Files.readString(saveFile.toPath());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        saveData = Files.readString(saveFile.toPath());
         if (!saveData.isEmpty()) {
             String[] saveDataArray = saveData.split("\n");
             for (int i = 1; i < saveDataArray.length; i++) {
@@ -113,7 +104,7 @@ public class FileBackedTaskManagerTest {
     }
 
     @Test
-    public void fileAndTaskListsShouldHaveSameDataAfterSave() {
+    public void fileAndTaskListsShouldHaveSameDataAfterSave() throws IOException {
         fileBackedTaskManager = FileBackedTaskManager.loadFromFile(saveFile);
         Epic epic1 = new Epic("Тестовый эпик №1",
                 "Описание эпик №1");
@@ -133,12 +124,7 @@ public class FileBackedTaskManagerTest {
 
         String saveData;
         if (saveFile.exists()) {
-            try {
-                saveData = Files.readString(saveFile.toPath());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
+            saveData = Files.readString(saveFile.toPath());
             if (!saveData.isEmpty()) {
                 String[] saveDataArray = saveData.split("\n");
                 for (int i = 1; i < saveDataArray.length; i++) {
