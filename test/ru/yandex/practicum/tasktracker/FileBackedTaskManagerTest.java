@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class FileBackedTaskManagerTest {
     FileBackedTaskManager fileBackedTaskManager;
@@ -111,15 +113,21 @@ public class FileBackedTaskManagerTest {
         fileBackedTaskManager.addEpic(epic1);
         Subtask subtask1 = new Subtask("Тестовый сабтаск №1",
                 "Описание сабтаск №1",
-                TaskStatus.NEW);
+                TaskStatus.NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(10));
         fileBackedTaskManager.addSubtask(epic1.getId(), subtask1);
         Subtask subtask2 = new Subtask("Тестовый сабтаск №2",
                 "Описание сабтаск №2",
-                TaskStatus.DONE);
+                TaskStatus.DONE,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
         fileBackedTaskManager.addSubtask(epic1.getId(), subtask2);
         Task task1 = new Task("Тестовый таск №1",
                 "Описание таск №1",
-                TaskStatus.DONE);
+                TaskStatus.DONE,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
         fileBackedTaskManager.addTask(task1);
 
         String saveData;

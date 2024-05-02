@@ -1,4 +1,5 @@
-import ru.yandex.practicum.tasktracker.*;
+import ru.yandex.practicum.tasktracker.FileBackedTaskManager;
+import ru.yandex.practicum.tasktracker.TaskManager;
 
 import java.io.File;
 
@@ -7,26 +8,20 @@ public class Main {
 
     private static void printAllTasks(TaskManager manager) {
         System.out.println("Задачи:");
-        for (Task task : manager.getTasksList()) {
-            System.out.println(task);
-        }
-        System.out.println("Эпики:");
-        for (Task epic : manager.getEpicsList()) {
-            System.out.println(epic);
+        manager.getTasksList().forEach(System.out::println);
 
-            for (Task task : manager.getEpicSubtaskList(epic.getId())) {
-                System.out.println("--> " + task);
-            }
-        }
+        System.out.println("Эпики:");
+        manager.getEpicsList().forEach(epic -> {
+            System.out.println(epic);
+            manager.getEpicSubtaskList(epic.getId())
+                    .forEach(subtask -> System.out.println("--> " + subtask));
+        });
+
         System.out.println("Подзадачи:");
-        for (Task subtask : manager.getSubtasksList()) {
-            System.out.println(subtask);
-        }
+        manager.getSubtasksList().forEach(System.out::println);
 
         System.out.println("История:");
-        for (Task task : manager.getHistory()) {
-            System.out.println(task);
-        }
+        manager.getHistory().forEach(System.out::println);
     }
 
     public static void main(String[] args) {
@@ -34,6 +29,14 @@ public class Main {
         fileBackedTaskManager = FileBackedTaskManager.loadFromFile(file);
         System.out.println("Начало работы программы...");
         printAllTasks(fileBackedTaskManager);
+        System.out.println(fileBackedTaskManager.getPrioritizedTasks());
+//        System.out.println(fileBackedTaskManager.getPrioritizedTasks().size());
+////        for(Task t: fileBackedTaskManager.getPrioritizedTasks()){
+//            System.out.println(t.getId()+"*)"+t.getStartTime());
+//        }
+
+
+
     }
 }
 

@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 class InMemoryHistoryManagerTest {
     public static TaskManager inMemoryTaskManager;
 
@@ -25,54 +28,92 @@ class InMemoryHistoryManagerTest {
     @Test
     public void taskFieldsAreTheSameAfterSavingToHistory() {
 
-        Task task1 = new Task(1, "Name1", "Description1", TaskStatus.NEW);
+        Task task1 = new Task(1, "Name1", "Description1", TaskStatus.NEW, LocalDateTime.now(), Duration.ofMinutes(30));
         inMemoryTaskManager.addTask(1, task1);
 
         inMemoryTaskManager.getTask(1);
-        Assertions.assertEquals(task1.getId(), inMemoryTaskManager.getHistory().get(0).getId(),
+        Assertions.assertEquals(task1.getId(),
+                inMemoryTaskManager.getHistory().get(0).getId(),
                 "значение поля Id объекта сохраненного в HistoryManager не совпадает с изначально заданными полем");
-        Assertions.assertEquals(task1.getDescription(), inMemoryTaskManager.getHistory().get(0).getDescription(),
+        Assertions.assertEquals(task1.getDescription(),
+                inMemoryTaskManager.getHistory().get(0).getDescription(),
                 "значение поля description объекта сохраненного в HistoryManager не совпадает с изначально заданными полем");
-        Assertions.assertEquals(task1.getName(), inMemoryTaskManager.getHistory().get(0).getName(),
+        Assertions.assertEquals(task1.getName(),
+                inMemoryTaskManager.getHistory().get(0).getName(),
                 "значение поля name объекта сохраненного в HistoryManager не совпадает с изначально заданными полем");
-        Assertions.assertEquals(task1.getStatus(), inMemoryTaskManager.getHistory().get(0).getStatus(),
+        Assertions.assertEquals(task1.getStatus(),
+                inMemoryTaskManager.getHistory().get(0).getStatus(),
                 "значение поля status объекта сохраненного в HistoryManager не совпадает с изначально заданными полем");
     }
 
     @Test
-    public void taskFieldsAreNewAfterTaskUpdate() {
-        Task task1 = new Task(1, "Name1", "Description1", TaskStatus.NEW);
+    public void taskFieldsSavePreviousVersionOfUpdatedTask() {
+        Task task1 = new Task(1,
+                "Name1",
+                "Description1",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 5, 2, 12, 0, 0),
+                Duration.ofMinutes(30));
         inMemoryTaskManager.addTask(1, task1);
         inMemoryTaskManager.getTask(1);
 
-        Task task2 = new Task(1, "Name2", "Description2", TaskStatus.NEW);
+        Task task2 = new Task(1,
+                "Name2",
+                "Description2",
+                TaskStatus.NEW, LocalDateTime.of(2024, 5, 2, 12, 0, 0),
+                Duration.ofMinutes(30));
         inMemoryTaskManager.updateTask(task2);
-        inMemoryTaskManager.getTask(1);
+        System.out.println(inMemoryTaskManager.getHistory());
 
-        Assertions.assertEquals(task2.getId(), inMemoryTaskManager.getHistory().get(0).getId(),
+        Assertions.assertEquals(task1.getId(),
+                inMemoryTaskManager.getHistory().get(0).getId(),
                 "значение поля Id объекта сохраненного в HistoryManager не равно полю обновленного объекта");
-        Assertions.assertEquals(task2.getDescription(), inMemoryTaskManager.getHistory().get(0).getDescription(),
+        Assertions.assertEquals(task1.getDescription(),
+                inMemoryTaskManager.getHistory().get(0).getDescription(),
                 "значение поля description объекта сохраненного в HistoryManager не равно полю обновленного объекта");
-        Assertions.assertEquals(task2.getName(), inMemoryTaskManager.getHistory().get(0).getName(),
+        Assertions.assertEquals(task1.getName(),
+                inMemoryTaskManager.getHistory().get(0).getName(),
                 "значение поля name объекта сохраненного в HistoryManager не равно полю обновленного объекта");
-        Assertions.assertEquals(task2.getStatus(), inMemoryTaskManager.getHistory().get(0).getStatus(),
+        Assertions.assertEquals(task2.getStatus(),
+                inMemoryTaskManager.getHistory().get(0).getStatus(),
                 "значение поля status объекта сохраненного в HistoryManager не равно полю обновленного объекта");
     }
 
     @Test
     public void historyListShouldHave0SizeAfterRemoveLastTaskFromIt() {
-        Task task1 = new Task(1, "Name1", "Description1", TaskStatus.NEW);
+        Task task1 = new Task(1,
+                "Name1",
+                "Description1",
+                TaskStatus.NEW, LocalDateTime.now(),
+                Duration.ofMinutes(30));
         inMemoryTaskManager.addTask(task1);
         inMemoryTaskManager.getTask(task1.getId());
         inMemoryTaskManager.removeTask(task1.getId());
-        Assertions.assertEquals(0, inMemoryTaskManager.getHistory().size(), "Задача не удалена!");
+        Assertions.assertEquals(0,
+                inMemoryTaskManager.getHistory().size(),
+                "Задача не удалена!");
     }
 
     @Test
     public void tasksShouldHaveSameFieldsAfterRemovingFromMiddleOfHistoryList() {
-        Task task1 = new Task(1, "Name1", "Description1", TaskStatus.NEW);
-        Task task2 = new Task(2, "Name2", "Description2", TaskStatus.NEW);
-        Task task3 = new Task(3, "Name3", "Description3", TaskStatus.NEW);
+        Task task1 = new Task(1,
+                "Name1",
+                "Description1",
+                TaskStatus.NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
+        Task task2 = new Task(2,
+                "Name2",
+                "Description2",
+                TaskStatus.NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
+        Task task3 = new Task(3,
+                "Name3",
+                "Description3",
+                TaskStatus.NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
         inMemoryTaskManager.addTask(task1);
         inMemoryTaskManager.addTask(task2);
         inMemoryTaskManager.addTask(task3);
@@ -89,9 +130,24 @@ class InMemoryHistoryManagerTest {
 
     @Test
     public void tasksShouldHaveSameFieldsAfterRemovingFromHistoryListTail() {
-        Task task1 = new Task(1, "Name1", "Description1", TaskStatus.NEW);
-        Task task2 = new Task(2, "Name2", "Description2", TaskStatus.NEW);
-        Task task3 = new Task(3, "Name3", "Description3", TaskStatus.NEW);
+        Task task1 = new Task(1,
+                "Name1",
+                "Description1",
+                TaskStatus.NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
+        Task task2 = new Task(2,
+                "Name2",
+                "Description2",
+                TaskStatus.NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
+        Task task3 = new Task(3,
+                "Name3",
+                "Description3",
+                TaskStatus.NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
         inMemoryTaskManager.addTask(task1);
         inMemoryTaskManager.addTask(task2);
         inMemoryTaskManager.addTask(task3);
@@ -109,9 +165,24 @@ class InMemoryHistoryManagerTest {
 
     @Test
     public void tasksShouldHaveSameFieldsAfterRemovingFromHistoryListHead() {
-        Task task1 = new Task(1, "Name1", "Description1", TaskStatus.NEW);
-        Task task2 = new Task(2, "Name2", "Description2", TaskStatus.NEW);
-        Task task3 = new Task(3, "Name3", "Description3", TaskStatus.NEW);
+        Task task1 = new Task(1,
+                "Name1",
+                "Description1",
+                TaskStatus.NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
+        Task task2 = new Task(2,
+                "Name2",
+                "Description2",
+                TaskStatus.NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
+        Task task3 = new Task(3,
+                "Name3",
+                "Description3",
+                TaskStatus.NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
         inMemoryTaskManager.addTask(task1);
         inMemoryTaskManager.addTask(task2);
         inMemoryTaskManager.addTask(task3);
@@ -130,7 +201,7 @@ class InMemoryHistoryManagerTest {
     @Test
     public void taskShouldBeInHistoryListAfterAdd() {
         HistoryManager historyManager = new InMemoryHistoryManager();
-        Task task1 = new Task(1, "Name1", "Description1", TaskStatus.NEW);
+        Task task1 = new Task(1, "Name1", "Description1", TaskStatus.NEW, LocalDateTime.now(), Duration.ofMinutes(30));
         historyManager.add(task1);
 
         Assertions.assertEquals(task1.getId(), historyManager.getHistory().get(0).getId(),
