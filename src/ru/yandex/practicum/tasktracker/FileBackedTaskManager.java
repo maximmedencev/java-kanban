@@ -53,7 +53,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     }
                 }
                 super.newTaskId = maxIndex + 1;
-                resortPrioritizedTasks();
+                //resortPrioritizedTasks();
             }
         }
     }
@@ -76,9 +76,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
-    private void save() {
+    protected void save() {
         RuntimeException managerSaveException = new ManagerSaveException("Произошла ошибка во время записи файла сохранения.");
-
 
         try (FileWriter writer = new FileWriter(saveFile.getAbsolutePath())) {
             writer.write("id,type,name,status,description,epic\n");

@@ -6,6 +6,11 @@ import ru.yandex.practicum.tasktracker.Epic;
 
 class EpicTest {
 
+    public static boolean epicsFieldsEquals(Epic epic1, Task epic2) {
+        return (epic1.getId() == epic2.getId())
+                && (epic1.getName().equals(epic2.getName()))
+                && (epic1.getDescription().equals(epic2.getDescription()));
+    }
 
     //наследники класса Task равны друг другу, если равен их id
     @Test

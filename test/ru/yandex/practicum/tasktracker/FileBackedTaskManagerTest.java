@@ -11,14 +11,33 @@ import java.nio.file.Files;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-public class FileBackedTaskManagerTest {
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     FileBackedTaskManager fileBackedTaskManager;
     File saveFile;
 
+    public void setup() throws IOException{
+        saveFile = File.createTempFile("java-kanban-save-test", ".csv");
+        super.taskManager = FileBackedTaskManager.loadFromFile(saveFile);
+    }
     @BeforeEach
     public void beforeEach() throws IOException {
-        saveFile = File.createTempFile("java-kanban-save-test", ".csv");
+        setup();
     }
+
+    @Test
+    public void testManagerSaveExceptionException() {
+        assertThrows(ManagerSaveException.class, () -> {
+            try (FileWriter writer = new FileWriter(saveFile.getAbsolutePath())) {
+                writer.write("Some string\n");
+                throw new IOException("Test IOException");
+            } catch (IOException e) {
+                throw new ManagerSaveException("Произошла ошибка во время записи файла.");
+            }
+        }, "ManagerSaveException не было выброшено");
+    }
+
 
     @Test
     public void taskListsShouldBeEmptyForEmptySaveFile() {

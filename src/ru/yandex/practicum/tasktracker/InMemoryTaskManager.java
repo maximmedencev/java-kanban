@@ -1,5 +1,6 @@
 package ru.yandex.practicum.tasktracker;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -8,6 +9,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected final Map<Integer, Epic> epics;
     protected final Map<Integer, Subtask> subtasks;
     protected final TreeSet<Task> prioritizedTasks;
+    protected HashMap<LocalDateTime, Boolean> tasksGrid = new HashMap<>();
 
     public HistoryManager historyManager = Managers.getDefaultHistory();
 
@@ -18,6 +20,43 @@ public class InMemoryTaskManager implements TaskManager {
         this.epics = new HashMap<>();
         this.subtasks = new HashMap<>();
         this.prioritizedTasks = new TreeSet<>(Comparator.comparing(task -> task.startTime));
+    }
+
+    private Task adjustTaskDateTimeToGrid(Task task) {
+        if (!tasksGrid.containsKey(task.getStartTime())) {
+            LocalDateTime timeForGrid = task.getStartTime().minusMinutes(task.getStartTime().getMinute() % 15);
+            tasksGrid.put(timeForGrid, true);
+            return new Task(task.getId(), task.getName(), task.getDescription(), task.getStatus(), timeForGrid, task.getDuration());
+        }
+        tasksGrid.put(task.getStartTime(), true);
+        return task;
+    }
+
+    private Subtask adjustTaskDateTimeToGrid(Subtask subtask) {
+        if (!tasksGrid.containsKey(subtask.getStartTime())) {
+            LocalDateTime timeForGrid = subtask.getStartTime().minusMinutes(subtask.getStartTime().getMinute() % 15);
+            return new Subtask(subtask.getId(),
+                    subtask.getEpicId(),
+                    subtask.getName(),
+                    subtask.getDescription(),
+                    subtask.getStatus(), timeForGrid,
+                    subtask.getDuration());
+
+        }
+        return subtask;
+    }
+
+    private boolean are15minIntervalsIntersectsOtherTasks(Task task) {
+        if (tasksGrid.containsKey(task.getStartTime()))
+            return true;
+
+        if (tasksGrid.containsKey(task.getStartTime().minusMinutes(15)))
+            return true;
+
+        if (tasksGrid.containsKey(task.getStartTime().plusMinutes(15)))
+            return true;
+
+        return false;
     }
 
     @Override
@@ -31,12 +70,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public ArrayList<Task> getEpicsList() {
+    public ArrayList<Epic> getEpicsList() {
         return new ArrayList<>(this.epics.values());
     }
 
     @Override
-    public ArrayList<Task> getSubtasksList() {
+    public ArrayList<Subtask> getSubtasksList() {
         return new ArrayList<>(this.subtasks.values());
     }
 
@@ -68,7 +107,6 @@ public class InMemoryTaskManager implements TaskManager {
         prioritizedTasks.addAll(subtasks.values().stream()
                 .filter(task -> task.getStartTime() != null)
                 .collect(Collectors.toList()));
-
     }
 
     protected boolean areTasksIntersect(Task t1, Task t2) {
@@ -147,7 +185,13 @@ public class InMemoryTaskManager implements TaskManager {
         if (task == null || task.getClass() != Task.class)
             return;
         setIdForNewTask(task);
-        tasks.put(task.getId(), task);
+        task = adjustTaskDateTimeToGrid(task);
+        if (!are15minIntervalsIntersectsOtherTasks(task)) {
+            tasks.put(task.getId(), task);
+            tasksGrid.put(task.getStartTime(),true);
+
+        }
+        //resortPrioritizedTasks();
     }
 
     @Override
@@ -165,9 +209,16 @@ public class InMemoryTaskManager implements TaskManager {
         setIdForNewTask(subtask);
         epics.get(epicId).addSubtaskId(subtask.getId());
         subtask.setEpicId(epicId);
-        subtasks.put(subtask.getId(), subtask);
+        subtask = adjustTaskDateTimeToGrid(subtask);
+        if (!are15minIntervalsIntersectsOtherTasks(subtask)){
+            tasksGrid.put(subtask.getStartTime(),true);
+            subtasks.put(subtask.getId(), subtask);
+
+        }
         updateEpicStatus(epics.get(epicId));
         refreshEpicStartTimeAndEndTime(epics.get(epicId));
+
+        //resortPrioritizedTasks();
     }
 
     @Override
@@ -176,15 +227,21 @@ public class InMemoryTaskManager implements TaskManager {
             return -2;
         if (tasks.containsKey(id))
             return -1;
-        Optional<Task> optionalIntersectedTask = tasks
-                .values()
-                .stream()
-                .filter(t -> areTasksIntersect(t, task))
-                .findFirst();
-        if (optionalIntersectedTask.isPresent())
-            return -3;
+//        Optional<Task> optionalIntersectedTask = tasks
+//                .values()
+//                .stream()
+//                .filter(t -> areTasksIntersect(t, task))
+//                .findFirst();
+//        if (optionalIntersectedTask.isPresent())
+//            return -3;
+        task = adjustTaskDateTimeToGrid(task);
         task.setId(id);
-        tasks.put(id, task);
+        if (!are15minIntervalsIntersectsOtherTasks(task)){
+            tasksGrid.put(task.getStartTime(),true);
+            tasks.put(id, task);
+
+        }
+        //resortPrioritizedTasks();
         return 0;
     }
 
@@ -206,42 +263,58 @@ public class InMemoryTaskManager implements TaskManager {
             return -2;
         if (subtasks.containsKey(id))
             return -1;
-        Optional<Subtask> optionalIntersectedTask = subtasks
-                .values()
-                .stream()
-                .filter(t -> areTasksIntersect(t, subtask))
-                .findFirst();
-        if (optionalIntersectedTask.isPresent()) {
-            Integer subtaskIdToRemove = subtask.getId();
-            epics.get(subtask.getEpicId()).getSubtasksIds().remove(subtaskIdToRemove);
-            return -3;
-        }
+//        Optional<Subtask> optionalIntersectedTask = subtasks
+//                .values()
+//                .stream()
+//                .filter(t -> areTasksIntersect(t, subtask))
+//                .findFirst();
+//        if (optionalIntersectedTask.isPresent()) {
+//            Integer subtaskIdToRemove = subtask.getId();
+//            epics.get(epicId).getSubtasksIds().remove(subtaskIdToRemove);
+//            return -3;
+//        }
 
         subtask.setId(id);
         epics.get(epicId).addSubtaskId(subtask.getId());
         subtask.setEpicId(epicId);
-        subtasks.put(subtask.getId(), subtask);
-        updateEpicStatus(epics.get(epicId));
-        refreshEpicStartTimeAndEndTime(epics.get(epicId));
-        return 0;
+        subtask = adjustTaskDateTimeToGrid(subtask);
+        if (!are15minIntervalsIntersectsOtherTasks(subtask)) {
+            tasks.put(id, subtask);
+            subtasks.put(subtask.getId(), subtask);
+            updateEpicStatus(epics.get(epicId));
+            refreshEpicStartTimeAndEndTime(epics.get(epicId));
+            //resortPrioritizedTasks();
+            return 0;
+        }
+        return -3;
     }
 
     @Override
-    public Task getTask(int id) {
-        historyManager.add(tasks.get(id));
-        return this.tasks.get(id);
+    public Optional<Task> getTask(int id) {
+        if (tasks.containsKey(id)) {
+            historyManager.add(tasks.get(id));
+            return Optional.of(this.tasks.get(id));
+        }
+        return Optional.empty();
     }
 
     @Override
-    public Epic getEpic(int id) {
-        historyManager.add(epics.get(id));
-        return this.epics.get(id);
+    public Optional<Epic> getEpic(int id) {
+        if (epics.containsKey(id)) {
+            historyManager.add(epics.get(id));
+            return Optional.of(this.epics.get(id));
+        }
+        return Optional.empty();
     }
 
     @Override
-    public Subtask getSubtask(int id) {
-        historyManager.add(subtasks.get(id));
-        return this.subtasks.get(id);
+    public Optional<Subtask> getSubtask(int id) {
+        if (subtasks.containsKey(id)) {
+            historyManager.add(subtasks.get(id));
+            return Optional.of(this.subtasks.get(id));
+        }
+        return Optional.empty();
+
     }
 
 
@@ -261,6 +334,7 @@ public class InMemoryTaskManager implements TaskManager {
             if (optionalIntersectedTask.isPresent())
                 return;
             tasks.put(task.getId(), task);
+            resortPrioritizedTasks();
         }
     }
 
@@ -292,6 +366,7 @@ public class InMemoryTaskManager implements TaskManager {
                 subtasks.put(subtask.getId(), subtask);
                 updateEpicStatus(epics.get(subtask.getEpicId()));
                 refreshEpicStartTimeAndEndTime(epics.get(subtask.getEpicId()));
+                resortPrioritizedTasks();
             }
         }
     }
