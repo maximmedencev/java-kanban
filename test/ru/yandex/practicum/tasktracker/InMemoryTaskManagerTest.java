@@ -3,7 +3,6 @@ package ru.yandex.practicum.tasktracker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.tasktracker.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -35,13 +34,17 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     @Test
     public void inMemoryTaskManagerShouldAddAndSeekSubtasks() {
         Epic epic1 = new Epic("Name", "Description");
-        Subtask subtask1 = new Subtask("Name", "Description", TaskStatus.NEW, LocalDateTime.now(), Duration.ofMinutes(30));
+        Subtask subtask1 = new Subtask("Name",
+                "Description",
+                TaskStatus.NEW, LocalDateTime.now(),
+                Duration.ofMinutes(30));
         super.taskManager.addEpic(epic1);
         super.taskManager.addSubtask(epic1.getId(), subtask1);
         int subtask1Id = subtask1.getId();
         Assertions.assertNotNull(super.taskManager.getSubtask(subtask1.getId()),
                 "subtask равен null");
-        Assertions.assertEquals(subtask1Id, super.taskManager.getSubtask(subtask1.getId()).get().getId(),
+        Assertions.assertEquals(subtask1Id,
+                super.taskManager.getSubtask(subtask1.getId()).get().getId(),
                 "по заданному id не содержится нужного объекта");
     }
 
@@ -80,7 +83,12 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     //тест, в котором проверяется неизменность задачи (по всем полям) при добавлении задачи в менеджер
     @Test
     public void taskFieldsShouldBeSameAfterAddingToTaskManager() {
-        Task task1 = new Task(1, "Name1", "Description1", TaskStatus.NEW, LocalDateTime.now(), Duration.ofMinutes(30));
+        Task task1 = new Task(1,
+                "Name1",
+                "Description1",
+                TaskStatus.NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
         int id = task1.getId();
         String name = task1.getName();
         String description = task1.getDescription();
@@ -98,7 +106,9 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
         Epic epic1 = new Epic(1, "Name1", "Description1");
         Epic epic2 = new Epic(epic1);
         super.taskManager.addEpic(1, epic1);
-        Assertions.assertEquals(epic1.getSubtasksIds(), epic2.getSubtasksIds(), "Значения полей различаются");
+        Assertions.assertEquals(epic1.getSubtasksIds(),
+                epic2.getSubtasksIds(),
+                "Значения полей различаются");
         Assertions.assertEquals(epic2, epic1, "Значения полей различаются");
     }
 
@@ -107,23 +117,45 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     public void subtaskFieldsShouldBeSameAfterAddingToTaskManager() {
         Epic epic1 = new Epic("Name1", "Description1");
         super.taskManager.addEpic(1, epic1);
-        Subtask subtask1 = new Subtask(2, 1, "Name2", "Description2", TaskStatus.NEW, LocalDateTime.now(), Duration.ofMinutes(30));
+        Subtask subtask1 = new Subtask(2,
+                1,
+                "Name2",
+                "Description2",
+                TaskStatus.NEW, LocalDateTime.now(),
+                Duration.ofMinutes(30));
         Subtask subtask2 = new Subtask(subtask1);
         super.taskManager.addSubtask(2, 1, subtask1);
         Assertions.assertEquals(subtask2, subtask1, "Значения полей различаются");
-        Assertions.assertEquals(subtask2.getEpicId(), subtask1.getEpicId(), "Значения полей различаются");
+        Assertions.assertEquals(subtask2.getEpicId(),
+                subtask1.getEpicId(),
+                "Значения полей различаются");
     }
 
     @Test
     public void shouldNotBeNotActualSubtasksIdsAfterRemoving() {
         Epic epic1 = new Epic("Name1", "Description1");
         super.taskManager.addEpic(1, epic1);
-        Subtask subtask1 = new Subtask(2, 1, "Name2", "Description2", TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 12, 0, 0), Duration.ofMinutes(30));
-        Subtask subtask2 = new Subtask(3, 1, "Name3", "Description3", TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 13, 0, 0), Duration.ofMinutes(30));
-        Subtask subtask3 = new Subtask(4, 1, "Name4", "Description4", TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 14, 0, 0), Duration.ofMinutes(30));
+        Subtask subtask1 = new Subtask(2,
+                1,
+                "Name2",
+                "Description2",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 5, 2, 12, 0, 0),
+                Duration.ofMinutes(30));
+        Subtask subtask2 = new Subtask(3,
+                1,
+                "Name3",
+                "Description3",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 5, 2, 13, 0, 0),
+                Duration.ofMinutes(30));
+        Subtask subtask3 = new Subtask(4,
+                1,
+                "Name4",
+                "Description4",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 5, 2, 14, 0, 0),
+                Duration.ofMinutes(30));
 
         super.taskManager.addSubtask(subtask1.getId(), 1, subtask1);
         super.taskManager.addSubtask(subtask2.getId(), 1, subtask2);
@@ -136,6 +168,4 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
         Assertions.assertFalse(super.taskManager.getEpic(1).get().getSubtasksIds().contains(3));
         Assertions.assertFalse(super.taskManager.getEpic(1).get().getSubtasksIds().contains(4));
     }
-
-
 }

@@ -1,6 +1,6 @@
 id,type,name,status,description,epic
 1,TASK,task1 name,NEW,task1 description,22.02.2022 12:00,PT30M,
-2,TASK,task2 name,NEW,task2 description,22.02.2022 13:15,PT30M,
+2,TASK,task2 name,NEW,task2 description,22.02.2022 13:00,PT30M,
 3,TASK,task3 name,NEW,task3 description,22.02.2022 14:00,PT30M,
 4,EPIC,epic1 name,DONE,epic1 description,
 5,EPIC,epic2 name,IN_PROGRESS,epic2 description,

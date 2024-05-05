@@ -53,7 +53,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     }
                 }
                 super.newTaskId = maxIndex + 1;
-                //resortPrioritizedTasks();
+                resortPrioritizedTasks();
             }
         }
     }
@@ -81,10 +81,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
         try (FileWriter writer = new FileWriter(saveFile.getAbsolutePath())) {
             writer.write("id,type,name,status,description,epic\n");
-//
-//            for (Task task : tasks.values()) {
-//                writer.write(toString(task));
-//            }
 
             tasks.values().forEach(task -> {
                 try {
@@ -109,14 +105,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     throw managerSaveException;
                 }
             });
-
-//            for (Epic epic : epics.values()) {
-//                writer.write(toString(epic));
-//            }
-//
-//            for (Subtask subtask : subtasks.values()) {
-//                writer.write(toString(subtask));
-//            }
 
         } catch (IOException e) {
             throw managerSaveException;

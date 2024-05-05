@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 class InMemoryHistoryManagerTest {
     public static TaskManager inMemoryTaskManager;
 
-
     @BeforeEach
     public void beforeEach() {
         inMemoryTaskManager = Managers.getDefault();
@@ -39,10 +38,8 @@ class InMemoryHistoryManagerTest {
         Assertions.assertTrue(TaskTest.taskFieldsEquals(task1, inMemoryTaskManager.getHistory().get(0)));
     }
 
-
     //задачи, добавляемые в HistoryManager, сохраняют значения полей
     //HistoryManager сохраняет новый объект задачи на место старого с тем же Id
-
     @Test
     public void taskFieldsAreTheSameAfterSavingToHistory() {
 
@@ -109,8 +106,12 @@ class InMemoryHistoryManagerTest {
 
         inMemoryTaskManager.removeTask(task2.getId());
 
-        Assertions.assertTrue(TaskTest.taskFieldsEquals(task1, inMemoryTaskManager.getHistory().get(0)), "Оставшиеся объекты не совпадают после удаления из середины списка");
-        Assertions.assertTrue(TaskTest.taskFieldsEquals(task3, inMemoryTaskManager.getHistory().get(1)), "Оставшиеся Объекты не совпадают после удаления из середины списка");
+        Assertions.assertTrue(TaskTest.taskFieldsEquals(task1,
+                        inMemoryTaskManager.getHistory().get(0)),
+                "Оставшиеся объекты не совпадают после удаления из середины списка");
+        Assertions.assertTrue(TaskTest.taskFieldsEquals(task3,
+                        inMemoryTaskManager.getHistory().get(1)),
+                "Оставшиеся Объекты не совпадают после удаления из середины списка");
     }
 
     @Test
@@ -143,9 +144,15 @@ class InMemoryHistoryManagerTest {
 
         inMemoryTaskManager.removeTask(task3.getId());
 
-        Assertions.assertTrue(TaskTest.taskFieldsEquals(task1, inMemoryTaskManager.getHistory().get(0)), "Оставшиеся Объекты не совпадают после удаления головы списка");
-        Assertions.assertTrue(TaskTest.taskFieldsEquals(task2, inMemoryTaskManager.getHistory().get(1)), "ОСтавшиеся Объекты не совпадают после удаления головы списка");
-        Assertions.assertEquals(2, inMemoryTaskManager.getHistory().size(), "В списке должно быть две задачи");
+        Assertions.assertTrue(TaskTest.taskFieldsEquals(task1,
+                        inMemoryTaskManager.getHistory().get(0)),
+                "Оставшиеся Объекты не совпадают после удаления головы списка");
+        Assertions.assertTrue(TaskTest.taskFieldsEquals(task2,
+                        inMemoryTaskManager.getHistory().get(1)),
+                "ОСтавшиеся Объекты не совпадают после удаления головы списка");
+        Assertions.assertEquals(2,
+                inMemoryTaskManager.getHistory().size(),
+                "В списке должно быть две задачи");
     }
 
     @Test
@@ -178,24 +185,39 @@ class InMemoryHistoryManagerTest {
 
         inMemoryTaskManager.removeTask(task1.getId());
 
-        Assertions.assertTrue(TaskTest.taskFieldsEquals(task2, inMemoryTaskManager.getHistory().get(0)), "Оставшиеся Объекты не совпадают после удаления головы списка");
-        Assertions.assertTrue(TaskTest.taskFieldsEquals(task3, inMemoryTaskManager.getHistory().get(1)), "ОСтавшиеся Объекты не совпадают после удаления головы списка");
-        Assertions.assertEquals(2, inMemoryTaskManager.getHistory().size(), "В списке должно быть две задачи");
+        Assertions.assertTrue(TaskTest.taskFieldsEquals(task2,
+                        inMemoryTaskManager.getHistory().get(0)),
+                "Оставшиеся Объекты не совпадают после удаления головы списка");
+        Assertions.assertTrue(TaskTest.taskFieldsEquals(task3,
+                        inMemoryTaskManager.getHistory().get(1)),
+                "ОСтавшиеся Объекты не совпадают после удаления головы списка");
+        Assertions.assertEquals(2,
+                inMemoryTaskManager.getHistory().size(),
+                "В списке должно быть две задачи");
     }
 
     @Test
     public void taskShouldBeInHistoryListAfterAdd() {
         HistoryManager historyManager = new InMemoryHistoryManager();
-        Task task1 = new Task(1, "Name1", "Description1", TaskStatus.NEW, LocalDateTime.now(), Duration.ofMinutes(30));
+        Task task1 = new Task(1,
+                "Name1",
+                "Description1",
+                TaskStatus.NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
         historyManager.add(task1);
 
-        Assertions.assertEquals(task1.getId(), historyManager.getHistory().get(0).getId(),
+        Assertions.assertEquals(task1.getId(),
+                historyManager.getHistory().get(0).getId(),
                 "объекты не совпадают");
-        Assertions.assertEquals(task1.getDescription(), historyManager.getHistory().get(0).getDescription(),
+        Assertions.assertEquals(task1.getDescription(),
+                historyManager.getHistory().get(0).getDescription(),
                 "объекты не совпадают");
-        Assertions.assertEquals(task1.getName(), historyManager.getHistory().get(0).getName(),
+        Assertions.assertEquals(task1.getName(),
+                historyManager.getHistory().get(0).getName(),
                 "объекты не совпадают");
-        Assertions.assertEquals(task1.getStatus(), historyManager.getHistory().get(0).getStatus(),
+        Assertions.assertEquals(task1.getStatus(),
+                historyManager.getHistory().get(0).getStatus(),
                 "объекты не совпадают");
     }
 }

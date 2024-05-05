@@ -38,13 +38,18 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.getTask(2);
         taskManager.getTask(3);
 
-        Assertions.assertEquals(3, taskManager.getHistory().size());
+        Assertions.assertEquals(3,
+                taskManager.getHistory().size(),
+                "Размер истории отличается от ожидаемого");
         Assertions.assertTrue(TaskTest.taskFieldsEquals(task1,
-                taskManager.getHistory().get(0)));
+                taskManager.getHistory().get(0)),
+                "Первый элемент истории не свопадеает с ожидаемым");
         Assertions.assertTrue(TaskTest.taskFieldsEquals(task2,
-                taskManager.getHistory().get(1)));
+                taskManager.getHistory().get(1)),
+                "Второй элемент истории не свопадеает с ожидаемым");
         Assertions.assertTrue(TaskTest.taskFieldsEquals(task3,
-                taskManager.getHistory().get(2)));
+                taskManager.getHistory().get(2)),
+                "Третий элемент истории не свопадеает с ожидаемым");
 
     }
 
@@ -73,13 +78,17 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addTask(task2);
         taskManager.addTask(task3);
 
-        Assertions.assertEquals(3, taskManager.getTasksList().size());
+        Assertions.assertEquals(3, taskManager.getTasksList().size(),
+                "Размер возвращаемого списка задач не совпадает с ожидаемым");
         Assertions.assertTrue(TaskTest.taskFieldsEquals(task1,
-                taskManager.getTasksList().get(0)));
+                taskManager.getTasksList().get(0)),
+                "Первый элемент списка задач не совпадает с ожидаемым");
         Assertions.assertTrue(TaskTest.taskFieldsEquals(task2,
-                taskManager.getTasksList().get(1)));
+                taskManager.getTasksList().get(1)),
+                "Второй элемент списка задач не совпадает с ожидаемым");
         Assertions.assertTrue(TaskTest.taskFieldsEquals(task3,
-                taskManager.getTasksList().get(2)));
+                taskManager.getTasksList().get(2)),
+                "Третий элемент списка задач не совпадает с ожидаемым");
     }
 
     //    List<Task> getEpicsList();
@@ -94,13 +103,17 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addEpic(epic2);
         taskManager.addEpic(epic3);
 
-        Assertions.assertEquals(3, taskManager.getEpicsList().size());
+        Assertions.assertEquals(3, taskManager.getEpicsList().size(),
+                "Размер возвращаемого списка эпиков не совпадает с ожидаемым");
         Assertions.assertTrue(EpicTest.epicsFieldsEquals(epic1,
-                taskManager.getEpicsList().get(0)));
+                taskManager.getEpicsList().get(0)),
+                "Первый элемент списка эпиков не совпадает с ожидаемым");
         Assertions.assertTrue(EpicTest.epicsFieldsEquals(epic2,
-                taskManager.getEpicsList().get(1)));
+                taskManager.getEpicsList().get(1)),
+                "Второй элемент списка эпиков не совпадает с ожидаемым");
         Assertions.assertTrue(EpicTest.epicsFieldsEquals(epic3,
-                taskManager.getEpicsList().get(2)));
+                taskManager.getEpicsList().get(2)),
+                "Третий элемент списка эпиков не совпадает с ожидаемым");
     }
 
     //    List<Task> getSubtasksList();
@@ -126,9 +139,18 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addSubtask(1, subtask1);
         taskManager.addSubtask(1, subtask2);
 
-        Assertions.assertEquals(2, taskManager.getSubtasksList().size());
-        Assertions.assertTrue(SubtaskTest.subtasksFieldsEquals(subtask1, taskManager.getSubtasksList().get(0)));
-        Assertions.assertTrue(SubtaskTest.subtasksFieldsEquals(subtask2, taskManager.getSubtasksList().get(1)));
+        Assertions.assertEquals(
+                2,
+                taskManager.getSubtasksList().size(),
+                "Размер возвращаемого списка подзадач не совпадает с ожидаемым");
+        Assertions.assertTrue(
+                SubtaskTest.subtasksFieldsEquals(subtask1,
+                taskManager.getSubtasksList().get(0)),
+                "Первый элемент списка подзадач не совпадает с ожидаемым");
+        Assertions.assertTrue(
+                SubtaskTest.subtasksFieldsEquals(subtask2,
+                taskManager.getSubtasksList().get(1)),
+                "Второй элемент списка подзадач не совпадает с ожидаемым");
     }
 
     //    void removeAllTasks();
@@ -157,7 +179,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addTask(task3);
         taskManager.removeAllTasks();
 
-        Assertions.assertEquals(0, taskManager.getTasksList().size());
+        Assertions.assertEquals(
+                0,
+                taskManager.getTasksList().size(),
+                "Список задач не пуст после очистки");
 
     }
 
@@ -174,7 +199,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         taskManager.removeAllEpics();
 
-        Assertions.assertEquals(0, taskManager.getEpicsList().size());
+        Assertions.assertEquals(
+                0,
+                taskManager.getEpicsList().size(),
+                "Список эпиков не пуст после очистки");
     }
 
     //    void removeAllSubtasks();
@@ -199,7 +227,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addSubtask(1, subtask2);
 
         taskManager.removeAllSubtasks();
-        Assertions.assertEquals(0, taskManager.getSubtasksList().size());
+        Assertions.assertEquals(
+                0,
+                taskManager.getSubtasksList().size(),
+                "Список подзадач не пуст после очистки");
     }
 
     //    void removeTask(int taskId);
@@ -229,7 +260,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         taskManager.removeTask(1);
 
-        Assertions.assertFalse(taskManager.getTasksList().contains(task1));
+        Assertions.assertFalse(
+                taskManager.getTasksList().contains(task1),
+                "Задача не удалена");
     }
 
     //    void removeEpic(int epicId);
@@ -245,7 +278,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         taskManager.removeEpic(1);
 
-        Assertions.assertFalse(taskManager.getTasksList().contains(epic1));
+        Assertions.assertFalse(
+                taskManager.getTasksList().contains(epic1),
+                "Эпик не был удален");
     }
 
     //    void removeSubtask(int subtaskId);
@@ -270,7 +305,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addSubtask(3, 1, subtask2);
         taskManager.removeSubtask(2);
 
-        Assertions.assertFalse(taskManager.getSubtasksList().contains(subtask1));
+        Assertions.assertFalse(
+                taskManager.getSubtasksList().contains(subtask1),
+                "Подзадача не была удалена");
     }
 
     //    void addTask(Task task);
@@ -282,7 +319,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 LocalDateTime.of(2024, 5, 2, 12, 0, 0),
                 Duration.ofMinutes(30));
         taskManager.addTask(task1);
-        Assertions.assertTrue(taskManager.getTasksList().contains(task1));
+        Assertions.assertTrue(
+                taskManager.getTasksList().contains(task1),
+                "Добавленная задача не найдена");
     }
 
     //    void addEpic(Epic epic);
@@ -290,7 +329,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
     public void shouldHaveSpecifiedEpicAfterAdd() {
         Epic epic1 = new Epic("Epic1 name", "Epic1 description");
         taskManager.addEpic(1, epic1);
-        Assertions.assertTrue(taskManager.getEpicsList().contains(epic1));
+        Assertions.assertTrue(taskManager.getEpicsList().contains(epic1),
+                "Добавленный эпик не найден");
     }
 
     //    void addSubtask(int epicId, Subtask subtask);
@@ -305,7 +345,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addEpic(epic1);
         taskManager.addSubtask(1, subtask1);
 
-        Assertions.assertTrue(taskManager.getSubtasksList().contains(subtask1));
+        Assertions.assertTrue(taskManager.getSubtasksList().contains(subtask1),
+                "Добавленная подзадача не найдена");
     }
 
     //    int addTask(int id, Task task);
@@ -317,8 +358,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 LocalDateTime.of(2024, 5, 2, 12, 0, 0),
                 Duration.ofMinutes(30));
         taskManager.addTask(1, task1);
-        Assertions.assertEquals(task1, taskManager.getTask(1).get());
-        Assertions.assertTrue(TaskTest.taskFieldsEquals(task1, taskManager.getTask(1).get()));
+        Assertions.assertEquals(task1, taskManager.getTask(1).get(),"Добавленная подзадача не найдена");
+        Assertions.assertTrue(TaskTest.taskFieldsEquals(task1,
+                taskManager.getTask(1).get()),
+                "Поля добавленной и запрошенной задачи не совпадают");
     }
 
     //    int addEpic(int id, Epic epic);
@@ -326,8 +369,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
     public void shouldHaveEpicWithSpecifiedIdAfterAdd() {
         Epic epic1 = new Epic("Epic1 name", "Epic1 description");
         taskManager.addEpic(1, epic1);
-        Assertions.assertEquals(epic1, taskManager.getEpic(1).get());
-        Assertions.assertTrue(EpicTest.epicsFieldsEquals(epic1, taskManager.getEpic(1).get()));
+        Assertions.assertEquals(epic1, taskManager.getEpic(1).get(),"Добавленный эпик не найден");
+        Assertions.assertTrue(EpicTest.epicsFieldsEquals(epic1, taskManager.getEpic(1).get()),
+                "Поля добавленного и запрошенного эпика не совпадают");
     }
 
     //    int addSubtask(int id, int epicId, Subtask subtask);
@@ -353,7 +397,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void shouldReturnMinus2WhenNull() {
-        Subtask subtask1 = new Subtask("Name1", "Description1", TaskStatus.NEW, LocalDateTime.now(), Duration.ofMinutes(30));
+        Subtask subtask1 = new Subtask("Name1",
+                "Description1",
+                TaskStatus.NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
         Epic epic1 = new Epic("Name1", "Description1");
         taskManager.addEpic(epic1);
         taskManager.addSubtask(epic1.getId(), subtask1);
@@ -395,8 +443,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 Duration.ofMinutes(30));
 
         taskManager.addTask(1, task1);
-        Assertions.assertEquals(task1, taskManager.getTask(1).get());
-        Assertions.assertTrue(TaskTest.taskFieldsEquals(task1, taskManager.getTask(1).get()));
+        Assertions.assertEquals(task1, taskManager.getTask(1).get(),
+                "У запрошенной и добавленной задачи не совпадают id");
+        Assertions.assertTrue(TaskTest.taskFieldsEquals(
+                task1,
+                taskManager.getTask(1).get()),
+                "Поля запрошенной и ожидаемой задачи не совпадапют");
     }
 
     //    Epic getEpic(int id);
@@ -404,7 +456,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
     public void shouldGetEpicWithSpecifiedId() {
         Epic epic1 = new Epic("Epic1 name", "Epic1 description");
         taskManager.addEpic(1, epic1);
-        Assertions.assertEquals(epic1, taskManager.getEpic(1).get());
+        Assertions.assertEquals(epic1,
+                taskManager.getEpic(1).get(),
+                "У запрошенного и добавленного эпика не совпадают id");
+        Assertions.assertTrue(EpicTest.epicsFieldsEquals(epic1,taskManager.getEpic(1).get()),
+                "Поля запрошенного и ожидаемого эпиков не совпадапют");
     }
 
     //    Subtask getSubtask(int id);
@@ -420,6 +476,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addEpic(1, epic1);
         taskManager.addSubtask(1, subtask1);
         Assertions.assertEquals(subtask1, taskManager.getSubtask(1).get());
+        Assertions.assertTrue(SubtaskTest.subtasksFieldsEquals(subtask1,taskManager.getSubtask(1).get()),
+                "Поля запрошенной и ожидаемой подзадачи не совпадапют");
     }
 
     //    List<Task> getEpicSubtaskList(int id);
@@ -441,9 +499,14 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addEpic(3, epic1);
         taskManager.addSubtask(1, epic1.getId(), subtask1);
         taskManager.addSubtask(2, epic1.getId(), subtask1);
-        Assertions.assertEquals(2, taskManager.getEpicSubtaskList(3).size());
-        Assertions.assertTrue(taskManager.getEpicSubtaskList(3).contains(subtask1));
-        Assertions.assertTrue(taskManager.getEpicSubtaskList(3).contains(subtask2));
+        Assertions.assertEquals(2,
+                taskManager.getEpicSubtaskList(3).size(),
+                "Ожидаемый и полученный размер списка эпиков не совпадают");
+        Assertions.assertTrue(taskManager.getEpicSubtaskList(3).contains(subtask1),
+                "Подзадача №1 не найдена списке подзадач");
+        Assertions.assertTrue(taskManager.getEpicSubtaskList(3).
+                contains(subtask2),
+                "Подзадача №2 не найдена списке подзадач");
     }
 
     //    void updateTask(Task task);
@@ -464,8 +527,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addTask(task1);
         taskManager.updateTask(task2);
 
-        Assertions.assertFalse(TaskTest.taskFieldsEquals(task1, taskManager.getTask(1).get()));
-        Assertions.assertTrue(TaskTest.taskFieldsEquals(task2, taskManager.getTask(1).get()));
+        Assertions.assertFalse(TaskTest.taskFieldsEquals(task1,
+                taskManager.getTask(1).get()),
+                "После обновления задача осталась прежней");
+        Assertions.assertTrue(TaskTest.taskFieldsEquals(task2,
+                taskManager.getTask(1).get()),
+                "Задача не равена обновленной");
     }
 
     //    void updateEpic(Epic epic);
@@ -477,8 +544,14 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addEpic(epic1);
         taskManager.updateEpic(epic2);
 
-        Assertions.assertFalse(EpicTest.epicsFieldsEquals(epic1, taskManager.getEpic(1).get()));
-        Assertions.assertTrue(EpicTest.epicsFieldsEquals(epic2, taskManager.getEpic(1).get()));
+        Assertions.assertFalse(EpicTest.epicsFieldsEquals(
+                epic1,
+                taskManager.getEpic(1).get()),
+                "После обновления эпик остался прежним");
+        Assertions.assertTrue(EpicTest.epicsFieldsEquals(
+                epic2,
+                taskManager.getEpic(1).get()),
+                "Поля запрошенногои нового эпика не свопадают");
 
     }
 
@@ -504,8 +577,12 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         taskManager.updateSubtask(subtask2);
 
-        Assertions.assertFalse(SubtaskTest.subtasksFieldsEquals(subtask1, taskManager.getSubtask(2).get()));
-        Assertions.assertTrue(SubtaskTest.subtasksFieldsEquals(subtask2, taskManager.getSubtask(2).get()));
+        Assertions.assertFalse(SubtaskTest.subtasksFieldsEquals(
+                subtask1, taskManager.getSubtask(2).get()),
+                "После обновления подзадача не изменилась");
+        Assertions.assertTrue(SubtaskTest.subtasksFieldsEquals(subtask2,
+                taskManager.getSubtask(2).get()),
+                "Поля запрошенной и новой подзадачи не свопадают");
     }
 
     //    void updateEpicStatus(Epic epic);
@@ -549,12 +626,27 @@ abstract class TaskManagerTest<T extends TaskManager> {
     public void epicStatusShouldBeInProgressIfAllSubtaskStatusesAreNewAndDone() {
         Epic epic1 = new Epic("Name1", "Description1");
         taskManager.addEpic(1, epic1);
-        Subtask subtask1 = new Subtask(2, 1, "Name2", "Description2", TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 12, 0, 0), Duration.ofMinutes(30));
-        Subtask subtask2 = new Subtask(3, 1, "Name3", "Description3", TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 13, 0, 0), Duration.ofMinutes(30));
-        Subtask subtask3 = new Subtask(4, 1, "Name4", "Description4", TaskStatus.DONE,
-                LocalDateTime.of(2024, 5, 2, 14, 0, 0), Duration.ofMinutes(30));
+        Subtask subtask1 = new Subtask(2,
+                1,
+                "Name2",
+                "Description2",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 5, 2, 12, 0, 0),
+                Duration.ofMinutes(30));
+        Subtask subtask2 = new Subtask(3,
+                1,
+                "Name3",
+                "Description3",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 5, 2, 13, 0, 0),
+                Duration.ofMinutes(30));
+        Subtask subtask3 = new Subtask(4,
+                1,
+                "Name4",
+                "Description4",
+                TaskStatus.DONE,
+                LocalDateTime.of(2024, 5, 2, 14, 0, 0),
+                Duration.ofMinutes(30));
 
         taskManager.addSubtask(subtask1.getId(), 1, subtask1);
         taskManager.addSubtask(subtask2.getId(), 1, subtask2);
@@ -567,12 +659,27 @@ abstract class TaskManagerTest<T extends TaskManager> {
     public void epicStatusShouldBeInProgressIfAllSubtaskStatusesAreInProgress() {
         Epic epic1 = new Epic("Name1", "Description1");
         taskManager.addEpic(1, epic1);
-        Subtask subtask1 = new Subtask(2, 1, "Name2", "Description2", TaskStatus.IN_PROGRESS,
-                LocalDateTime.of(2024, 5, 2, 12, 0, 0), Duration.ofMinutes(30));
-        Subtask subtask2 = new Subtask(3, 1, "Name3", "Description3", TaskStatus.IN_PROGRESS,
-                LocalDateTime.of(2024, 5, 2, 13, 0, 0), Duration.ofMinutes(30));
-        Subtask subtask3 = new Subtask(4, 1, "Name4", "Description4", TaskStatus.IN_PROGRESS,
-                LocalDateTime.of(2024, 5, 2, 14, 0, 0), Duration.ofMinutes(30));
+        Subtask subtask1 = new Subtask(2,
+                1,
+                "Name2",
+                "Description2",
+                TaskStatus.IN_PROGRESS,
+                LocalDateTime.of(2024, 5, 2, 12, 0, 0),
+                Duration.ofMinutes(30));
+        Subtask subtask2 = new Subtask(3,
+                1,
+                "Name3",
+                "Description3",
+                TaskStatus.IN_PROGRESS,
+                LocalDateTime.of(2024, 5, 2, 13, 0, 0),
+                Duration.ofMinutes(30));
+        Subtask subtask3 = new Subtask(4,
+                1,
+                "Name4",
+                "Description4",
+                TaskStatus.IN_PROGRESS,
+                LocalDateTime.of(2024, 5, 2, 14, 0, 0),
+                Duration.ofMinutes(30));
 
         taskManager.addSubtask(subtask1.getId(), 1, subtask1);
         taskManager.addSubtask(subtask2.getId(), 1, subtask2);
@@ -586,12 +693,27 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     public void shouldReturnPrioritizedTasks() {
         Epic epic1 = new Epic("Name1", "Description1");
-        Subtask subtask1 = new Subtask(2, 1, "Name2", "Description2", TaskStatus.IN_PROGRESS,
-                LocalDateTime.of(2024, 5, 2, 12, 0, 0), Duration.ofMinutes(30));
-        Subtask subtask2 = new Subtask(3, 1, "Name3", "Description3", TaskStatus.IN_PROGRESS,
-                LocalDateTime.of(2024, 5, 2, 13, 0, 0), Duration.ofMinutes(30));
-        Subtask subtask3 = new Subtask(4, 1, "Name4", "Description4", TaskStatus.IN_PROGRESS,
-                LocalDateTime.of(2024, 5, 2, 14, 0, 0), Duration.ofMinutes(30));
+        Subtask subtask1 = new Subtask(2,
+                1,
+                "Name2",
+                "Description2",
+                TaskStatus.IN_PROGRESS,
+                LocalDateTime.of(2024, 5, 2, 12, 0, 0),
+                Duration.ofMinutes(30));
+        Subtask subtask2 = new Subtask(3,
+                1,
+                "Name3",
+                "Description3",
+                TaskStatus.IN_PROGRESS,
+                LocalDateTime.of(2024, 5, 2, 13, 0, 0),
+                Duration.ofMinutes(30));
+        Subtask subtask3 = new Subtask(4,
+                1,
+                "Name4",
+                "Description4",
+                TaskStatus.IN_PROGRESS,
+                LocalDateTime.of(2024, 5, 2, 14, 0, 0),
+                Duration.ofMinutes(30));
 
         Task task1 = new Task(5, "Task1 name",
                 "Task1 description",
@@ -621,11 +743,23 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.addTask(6, task2);
         taskManager.addTask(7, task3);
 
-        Assertions.assertEquals(subtask1, taskManager.getPrioritizedTasks().get(0));
-        Assertions.assertEquals(subtask2, taskManager.getPrioritizedTasks().get(1));
-        Assertions.assertEquals(subtask3, taskManager.getPrioritizedTasks().get(2));
-        Assertions.assertEquals(task1, taskManager.getPrioritizedTasks().get(3));
-        Assertions.assertEquals(task2, taskManager.getPrioritizedTasks().get(4));
-        Assertions.assertEquals(task3, taskManager.getPrioritizedTasks().get(5));
+        Assertions.assertEquals(subtask1,
+                taskManager.getPrioritizedTasks().get(0),
+                "Порядок задач в приоретезированном списке не соответствует времени старта задач");
+        Assertions.assertEquals(subtask2,
+                taskManager.getPrioritizedTasks().get(1),
+                "Порядок задач в приоретезированном списке не соответствует времени старта задач");
+        Assertions.assertEquals(subtask3,
+                taskManager.getPrioritizedTasks().get(2),
+                "Порядок задач в приоретезированном списке не соответствует времени старта задач");
+        Assertions.assertEquals(task1,
+                taskManager.getPrioritizedTasks().get(3),
+                "Порядок задач в приоретезированном списке не соответствует времени старта задач");
+        Assertions.assertEquals(task2,
+                taskManager.getPrioritizedTasks().get(4),
+                "Порядок задач в приоретезированном списке не соответствует времени старта задач");
+        Assertions.assertEquals(task3,
+                taskManager.getPrioritizedTasks().get(5),
+                "Порядок задач в приоретезированном списке не соответствует времени старта задач");
     }
 }
