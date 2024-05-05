@@ -44,6 +44,29 @@ public class InMemoryTaskManager implements TaskManager {
         return new ArrayList<>(prioritizedTasks);
     }
 
+    private boolean validateTaskTime(Task task) {
+        Optional<Task> optionalIntersectedTask = tasks
+                .values()
+                .stream()
+                .filter(t -> areTasksIntersect(t, task))
+                .findFirst();
+        if (optionalIntersectedTask.isPresent())
+            return false;
+        return true;
+    }
+
+    private boolean validateSubtaskTime(Subtask subtask) {
+        Optional<Subtask> optionalIntersectedTask = subtasks
+                .values()
+                .stream()
+                .filter(t -> areTasksIntersect(t, subtask))
+                .findFirst();
+        if (optionalIntersectedTask.isPresent()) {
+            return false;
+        }
+        return true;
+    }
+
     protected void refreshEpicStartTimeAndEndTime(Epic epic) {
         if (epic.getSubtasksIds().isEmpty()) {
             epic.startTime = null;
@@ -145,6 +168,8 @@ public class InMemoryTaskManager implements TaskManager {
         if (task == null || task.getClass() != Task.class)
             return;
         setIdForNewTask(task);
+        if (!validateTaskTime(task))
+            return;
         tasks.put(task.getId(), task);
         resortPrioritizedTasks();
     }
@@ -162,6 +187,8 @@ public class InMemoryTaskManager implements TaskManager {
         if (subtask == null)
             return;
         setIdForNewTask(subtask);
+        if (!validateSubtaskTime(subtask))
+            return;
         epics.get(epicId).addSubtaskId(subtask.getId());
         subtask.setEpicId(epicId);
         subtasks.put(subtask.getId(), subtask);
@@ -176,18 +203,14 @@ public class InMemoryTaskManager implements TaskManager {
             return -2;
         if (tasks.containsKey(id))
             return -1;
-        Optional<Task> optionalIntersectedTask = tasks
-                .values()
-                .stream()
-                .filter(t -> areTasksIntersect(t, task))
-                .findFirst();
-        if (optionalIntersectedTask.isPresent())
+        if (!validateTaskTime(task))
             return -3;
         task.setId(id);
         tasks.put(id, task);
         resortPrioritizedTasks();
         return 0;
     }
+
 
     @Override
     public int addEpic(int id, Epic epic) {
@@ -207,12 +230,7 @@ public class InMemoryTaskManager implements TaskManager {
             return -2;
         if (subtasks.containsKey(id))
             return -1;
-        Optional<Subtask> optionalIntersectedTask = subtasks
-                .values()
-                .stream()
-                .filter(t -> areTasksIntersect(t, subtask))
-                .findFirst();
-        if (optionalIntersectedTask.isPresent()) {
+        if (!validateSubtaskTime(subtask)) {
             Integer subtaskIdToRemove = subtask.getId();
             epics.get(epicId).getSubtasksIds().remove(subtaskIdToRemove);
             return -3;
@@ -261,13 +279,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateTask(Task task) {
         if (tasks.containsKey(task.getId())) {
-            Optional<Task> optionalIntersectedTask = tasks
-                    .values()
-                    .stream()
-                    .filter(t -> t.getId() != task.getId())
-                    .filter(t -> areTasksIntersect(t, task))
-                    .findFirst();
-            if (optionalIntersectedTask.isPresent())
+            if (!validateTaskTime(task))
                 return;
             tasks.put(task.getId(), task);
             resortPrioritizedTasks();
@@ -284,13 +296,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateSubtask(Subtask subtask) {
         if (subtasks.containsKey(subtask.getId())) {
             int epicId = subtasks.get(subtask.getId()).getEpicId();
-            Optional<Subtask> optionalIntersectedTask = subtasks
-                    .values()
-                    .stream()
-                    .filter(t -> areTasksIntersect(t, subtask))
-                    .filter(t -> t.getId() != subtask.getId())
-                    .findFirst();
-            if (optionalIntersectedTask.isPresent()) {
+            if (!validateSubtaskTime(subtask)) {
                 Integer subtaskIdToRemove = subtask.getId();
                 epics.get(subtask.getEpicId()).getSubtasksIds().remove(subtaskIdToRemove);
                 return;

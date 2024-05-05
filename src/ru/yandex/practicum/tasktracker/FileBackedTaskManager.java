@@ -140,7 +140,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                         "," + task.getStatus() +
                         "," + task.getDescription() +
                         "," + startTime +
-                        "," + task.getDuration() +
+                        "," + duration +
                         ",\n";
         }
 

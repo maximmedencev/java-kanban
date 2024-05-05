@@ -568,7 +568,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 "Name2",
                 "Description2",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 12, 10, 0),
+                LocalDateTime.of(2024, 5, 2, 13, 0, 0),
                 Duration.ofMinutes(30));
         Epic epic1 = new Epic("Name1", "Description1");
 

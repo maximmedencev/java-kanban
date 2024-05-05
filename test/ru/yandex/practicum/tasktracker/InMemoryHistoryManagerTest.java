@@ -82,13 +82,13 @@ class InMemoryHistoryManagerTest {
                 "Name1",
                 "Description1",
                 TaskStatus.NEW,
-                LocalDateTime.now(),
+                LocalDateTime.of(2024, 5, 2, 12, 0, 0),
                 Duration.ofMinutes(30));
         Task task2 = new Task(2,
                 "Name2",
                 "Description2",
                 TaskStatus.NEW,
-                LocalDateTime.now(),
+                LocalDateTime.of(2024, 5, 2, 13, 0, 0),
                 Duration.ofMinutes(30));
         Task task3 = new Task(3,
                 "Name3",
@@ -120,19 +120,19 @@ class InMemoryHistoryManagerTest {
                 "Name1",
                 "Description1",
                 TaskStatus.NEW,
-                LocalDateTime.now(),
+                LocalDateTime.of(2024, 5, 2, 12, 0, 0),
                 Duration.ofMinutes(30));
         Task task2 = new Task(2,
                 "Name2",
                 "Description2",
                 TaskStatus.NEW,
-                LocalDateTime.now(),
+                LocalDateTime.of(2024, 5, 2, 13, 0, 0),
                 Duration.ofMinutes(30));
         Task task3 = new Task(3,
                 "Name3",
                 "Description3",
                 TaskStatus.NEW,
-                LocalDateTime.now(),
+                LocalDateTime.of(2024, 5, 2, 14, 0, 0),
                 Duration.ofMinutes(30));
         inMemoryTaskManager.addTask(task1);
         inMemoryTaskManager.addTask(task2);
@@ -161,19 +161,19 @@ class InMemoryHistoryManagerTest {
                 "Name1",
                 "Description1",
                 TaskStatus.NEW,
-                LocalDateTime.now(),
+                LocalDateTime.of(2024, 5, 2, 12, 0, 0),
                 Duration.ofMinutes(30));
         Task task2 = new Task(2,
                 "Name2",
                 "Description2",
                 TaskStatus.NEW,
-                LocalDateTime.now(),
+                LocalDateTime.of(2024, 5, 2, 13, 0, 0),
                 Duration.ofMinutes(30));
         Task task3 = new Task(3,
                 "Name3",
                 "Description3",
                 TaskStatus.NEW,
-                LocalDateTime.now(),
+                LocalDateTime.of(2024, 5, 2, 14, 0, 0),
                 Duration.ofMinutes(30));
         inMemoryTaskManager.addTask(task1);
         inMemoryTaskManager.addTask(task2);
