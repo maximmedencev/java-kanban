@@ -27,7 +27,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             try {
                 saveData = Files.readString(saveFile.toPath());
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new ManagerSaveException("Произошла ошибка во время чтения файла сохранения.");
             }
             int maxIndex = 0;
 
@@ -53,7 +53,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     }
                 }
                 super.newTaskId = maxIndex + 1;
-                resortPrioritizedTasks();
             }
         }
     }
@@ -77,37 +76,23 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     protected void save() {
-        RuntimeException managerSaveException = new ManagerSaveException("Произошла ошибка во время записи файла сохранения.");
-
         try (FileWriter writer = new FileWriter(saveFile.getAbsolutePath())) {
             writer.write("id,type,name,status,description,epic\n");
 
-            tasks.values().forEach(task -> {
-                try {
-                    writer.write(toString(task));
-                } catch (IOException e) {
-                    throw managerSaveException;
-                }
-            });
+            for (Task task : tasks.values()) {
+                writer.write(toString(task));
+            }
 
-            epics.values().forEach(epic -> {
-                try {
-                    writer.write(toString(epic));
-                } catch (IOException e) {
-                    throw managerSaveException;
-                }
-            });
+            for (Epic epic : epics.values()) {
+                writer.write(toString(epic));
+            }
 
-            subtasks.values().forEach(subtask -> {
-                try {
-                    writer.write(toString(subtask));
-                } catch (IOException e) {
-                    throw managerSaveException;
-                }
-            });
+            for (Subtask subtask : subtasks.values()) {
+                writer.write(toString(subtask));
+            }
 
         } catch (IOException e) {
-            throw managerSaveException;
+            throw new ManagerSaveException("Произошла ошибка во время записи файла сохранения.");
         }
     }
 

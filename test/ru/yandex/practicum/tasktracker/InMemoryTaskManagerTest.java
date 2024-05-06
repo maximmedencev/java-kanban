@@ -161,11 +161,40 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
         super.taskManager.addSubtask(subtask2.getId(), 1, subtask2);
         super.taskManager.addSubtask(subtask3.getId(), 1, subtask3);
 
-        System.out.println(super.taskManager.getSubtasksList());
         super.taskManager.removeSubtask(3);
         super.taskManager.removeSubtask(4);
 
         Assertions.assertFalse(super.taskManager.getEpic(1).get().getSubtasksIds().contains(3));
         Assertions.assertFalse(super.taskManager.getEpic(1).get().getSubtasksIds().contains(4));
     }
+
+    @Test
+    public void taskShouldNotBeAddedWhenIntersects() {
+        Task task1 = new Task(1, "Task1 name",
+                "Task1 description",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 5, 2, 12, 0, 0),
+                Duration.ofMinutes(30));
+
+        Task task2 = new Task(2, "Task2 name",
+                "Task2 description",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 5, 2, 12, 15, 0),
+                Duration.ofMinutes(30));
+
+        Task task3 = new Task(3, "Task3 name",
+                "Task3 description",
+                TaskStatus.NEW,
+                LocalDateTime.of(2024, 5, 2, 14, 0, 0),
+                Duration.ofMinutes(30));
+
+        super.taskManager.addTask(task1);
+        super.taskManager.addTask(task2);
+        super.taskManager.addTask(task3);
+
+        Assertions.assertTrue(super.taskManager.getTasksList().contains(task1));
+        Assertions.assertFalse(super.taskManager.getTasksList().contains(task2));
+        Assertions.assertTrue(super.taskManager.getTasksList().contains(task3));
+    }
+
 }
