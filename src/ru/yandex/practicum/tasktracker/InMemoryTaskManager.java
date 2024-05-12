@@ -48,7 +48,7 @@ public class InMemoryTaskManager implements TaskManager {
         Optional<Task> optionalIntersectedTask = tasks
                 .values()
                 .stream()
-                .filter(t -> areTasksIntersect(t, task))
+                .filter(t -> task.getId() != t.getId() && areTasksIntersect(t, task))
                 .findFirst();
         if (optionalIntersectedTask.isPresent())
             return false;
@@ -59,7 +59,7 @@ public class InMemoryTaskManager implements TaskManager {
         Optional<Subtask> optionalIntersectedTask = subtasks
                 .values()
                 .stream()
-                .filter(t -> areTasksIntersect(t, subtask))
+                .filter(t -> subtask.getId() != t.getId() && areTasksIntersect(t, subtask))
                 .findFirst();
         if (optionalIntersectedTask.isPresent()) {
             return false;
@@ -73,14 +73,16 @@ public class InMemoryTaskManager implements TaskManager {
             epic.endTime = null;
             return;
         }
-        epic.startTime = getEpicSubtaskList(epic.getId()).stream()
+
+        getEpicSubtaskList(epic.getId()).stream()
+                .filter(task -> task.getStartTime() != null)
                 .min(Comparator.comparing(Task::getStartTime))
-                .get()
-                .getStartTime();
-        epic.endTime = getEpicSubtaskList(epic.getId()).stream()
+                .ifPresent(task -> epic.startTime = task.getStartTime());
+
+        getEpicSubtaskList(epic.getId()).stream()
+                .filter(task -> task.getStartTime() != null)
                 .max(Comparator.comparing(Task::getEndTime))
-                .get()
-                .getEndTime();
+                .ifPresent(task -> epic.endTime = task.getEndTime());
     }
 
     private void addToPrioritizedTasks(Task task) {
@@ -90,7 +92,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     protected boolean areTasksIntersect(Task t1, Task t2) {
         if (t1.getStartTime() == null || t2.getStartTime() == null)
-            return true;
+            return false;
         return (t1.getEndTime().isAfter(t2.getStartTime()) && t1.getEndTime().isBefore(t2.getEndTime())) ||
                 (t1.getStartTime().isAfter(t2.getStartTime()) && t1.getStartTime().isBefore(t2.getEndTime())) ||
                 (t2.getEndTime().isAfter(t1.getStartTime()) && t2.getEndTime().isBefore(t1.getEndTime())) ||

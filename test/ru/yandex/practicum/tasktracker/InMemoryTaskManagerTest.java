@@ -8,7 +8,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 
 class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
-    public static TaskManager inMemoryTaskManager;
 
     public void setup() {
         super.taskManager = (InMemoryTaskManager) Managers.getDefault();

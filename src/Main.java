@@ -29,6 +29,7 @@ public class Main {
         fileBackedTaskManager = FileBackedTaskManager.loadFromFile(file);
         System.out.println("Начало работы программы...");
         printAllTasks(fileBackedTaskManager);
+        System.out.println(fileBackedTaskManager.getPrioritizedTasks());
     }
 }
 
