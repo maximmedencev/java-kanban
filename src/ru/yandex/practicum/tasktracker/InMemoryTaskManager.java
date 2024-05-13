@@ -45,26 +45,17 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private boolean validateTaskTime(Task task) {
-        Optional<Task> optionalIntersectedTask = tasks
+        return tasks
                 .values()
                 .stream()
-                .filter(t -> task.getId() != t.getId() && areTasksIntersect(t, task))
-                .findFirst();
-        if (optionalIntersectedTask.isPresent())
-            return false;
-        return true;
+                .noneMatch(t -> task.getId() != t.getId() && areTasksIntersect(t, task));
     }
 
     private boolean validateSubtaskTime(Subtask subtask) {
-        Optional<Subtask> optionalIntersectedTask = subtasks
+        return subtasks
                 .values()
                 .stream()
-                .filter(t -> subtask.getId() != t.getId() && areTasksIntersect(t, subtask))
-                .findFirst();
-        if (optionalIntersectedTask.isPresent()) {
-            return false;
-        }
-        return true;
+                .noneMatch(t -> subtask.getId() != t.getId() && areTasksIntersect(t, subtask));
     }
 
     protected void refreshEpicStartTimeAndEndTime(Epic epic) {
