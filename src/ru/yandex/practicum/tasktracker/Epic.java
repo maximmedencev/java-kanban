@@ -1,9 +1,11 @@
 package ru.yandex.practicum.tasktracker;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic extends Task {
     protected ArrayList<Integer> subtasksIds = new ArrayList<>();
+    protected LocalDateTime endTime;
 
     public Epic(String name, String description) {
         super(name, description);
@@ -17,6 +19,8 @@ public class Epic extends Task {
     public Epic(Epic epic) {
         super(epic.name, epic.description);
         this.id = epic.id;
+        this.startTime = epic.startTime;
+        this.endTime = epic.endTime;
         subtasksIds.addAll(epic.getSubtasksIds());
     }
 

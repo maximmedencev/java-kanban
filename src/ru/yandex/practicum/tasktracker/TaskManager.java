@@ -1,15 +1,16 @@
 package ru.yandex.practicum.tasktracker;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TaskManager {
     List<Task> getHistory();
 
     List<Task> getTasksList();
 
-    List<Task> getEpicsList();
+    List<Epic> getEpicsList();
 
-    List<Task> getSubtasksList();
+    List<Subtask> getSubtasksList();
 
     void removeAllTasks();
 
@@ -35,11 +36,11 @@ public interface TaskManager {
 
     int addSubtask(int id, int epicId, Subtask subtask);
 
-    Task getTask(int id);
+    Optional<Task> getTask(int id);
 
-    Epic getEpic(int id);
+    Optional<Epic> getEpic(int id);
 
-    Subtask getSubtask(int id);
+    Optional<Subtask> getSubtask(int id);
 
     List<Task> getEpicSubtaskList(int id);
 
@@ -51,4 +52,5 @@ public interface TaskManager {
 
     void updateEpicStatus(Epic epic);
 
+    List<Task> getPrioritizedTasks();
 }

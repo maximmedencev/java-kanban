@@ -8,15 +8,36 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
-public class FileBackedTaskManagerTest {
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     FileBackedTaskManager fileBackedTaskManager;
     File saveFile;
 
+    public void setup() throws IOException{
+        saveFile = File.createTempFile("java-kanban-save-test", ".csv");
+        super.taskManager = FileBackedTaskManager.loadFromFile(saveFile);
+    }
     @BeforeEach
     public void beforeEach() throws IOException {
-        saveFile = File.createTempFile("java-kanban-save-test", ".csv");
+        setup();
     }
+
+    @Test
+    public void testManagerSaveExceptionException() {
+        assertThrows(ManagerSaveException.class, () -> {
+            try (FileWriter writer = new FileWriter(saveFile.getAbsolutePath())) {
+                writer.write("Some string\n");
+                throw new IOException("Test IOException");
+            } catch (IOException e) {
+                throw new ManagerSaveException("Произошла ошибка во время записи файла.");
+            }
+        }, "ManagerSaveException не было выброшено");
+    }
+
 
     @Test
     public void taskListsShouldBeEmptyForEmptySaveFile() {
@@ -111,15 +132,21 @@ public class FileBackedTaskManagerTest {
         fileBackedTaskManager.addEpic(epic1);
         Subtask subtask1 = new Subtask("Тестовый сабтаск №1",
                 "Описание сабтаск №1",
-                TaskStatus.NEW);
+                TaskStatus.NEW,
+                LocalDateTime.now(),
+                Duration.ofMinutes(10));
         fileBackedTaskManager.addSubtask(epic1.getId(), subtask1);
         Subtask subtask2 = new Subtask("Тестовый сабтаск №2",
                 "Описание сабтаск №2",
-                TaskStatus.DONE);
+                TaskStatus.DONE,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
         fileBackedTaskManager.addSubtask(epic1.getId(), subtask2);
         Task task1 = new Task("Тестовый таск №1",
                 "Описание таск №1",
-                TaskStatus.DONE);
+                TaskStatus.DONE,
+                LocalDateTime.now(),
+                Duration.ofMinutes(30));
         fileBackedTaskManager.addTask(task1);
 
         String saveData;
