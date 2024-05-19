@@ -24,7 +24,7 @@ public class HttpTaskManagerPrioritizedTest {
     TaskManager manager = new InMemoryTaskManager();
     // передаём его в качестве аргумента в конструктор HttpTaskServer
     HttpTaskServer taskServer = new HttpTaskServer(manager);
-    public static Gson gson = HttpTaskServer.getGson();
+    public static Gson gson;
 
     public HttpTaskManagerPrioritizedTest() throws IOException {
     }

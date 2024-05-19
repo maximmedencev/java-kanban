@@ -1,7 +1,6 @@
 package ru.yandex.practicum.tasktracker.http;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,10 +33,6 @@ public class HttpTaskManagerSubtasksTest {
 
     @BeforeEach
     public void setUp() {
-        gson = new GsonBuilder()
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .create();
         manager.removeAllTasks();
         manager.removeAllSubtasks();
         manager.removeAllEpics();
