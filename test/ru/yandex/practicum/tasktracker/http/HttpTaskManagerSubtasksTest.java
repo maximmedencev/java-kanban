@@ -50,19 +50,19 @@ public class HttpTaskManagerSubtasksTest {
         Subtask subtask1 = new Subtask(5, "Subtask1 name",
                 "Subtask1 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 15, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 15, 0),
                 Duration.ofMinutes(30));
 
         Subtask subtask2 = new Subtask(6, "Subtask2 name",
                 "Subtask2 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 16, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 16, 0),
                 Duration.ofMinutes(30));
 
         Subtask subtask3 = new Subtask(7, "Subtask3 name",
                 "Subtask3 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 17, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 17, 0),
                 Duration.ofMinutes(30));
 
         manager.addSubtask(subtask1);
@@ -96,19 +96,19 @@ public class HttpTaskManagerSubtasksTest {
         Subtask subtask1 = new Subtask(1, "Subtask1 name",
                 "Subtask1 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 15, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 15, 0),
                 Duration.ofMinutes(30));
 
         Subtask subtask2 = new Subtask(2, "Subtask2 name",
                 "Subtask2 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 16, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 16, 0),
                 Duration.ofMinutes(30));
 
         Subtask subtask3 = new Subtask(3, "Task3 name",
                 "Task3 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 17, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 17, 0),
                 Duration.ofMinutes(30));
 
         manager.addSubtask(subtask1);
@@ -193,13 +193,13 @@ public class HttpTaskManagerSubtasksTest {
         Subtask subtask1 = new Subtask(1, "Subtask1 name",
                 "Subtask1 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 15, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 15, 0),
                 Duration.ofMinutes(30));
 
         Subtask subtask2 = new Subtask(1, "Subtask1 name updated",
                 "Subtask1 description updated",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 15, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 15, 0),
                 Duration.ofMinutes(30));
 
         // конвертируем её в JSON
@@ -231,19 +231,19 @@ public class HttpTaskManagerSubtasksTest {
         Subtask subtask1 = new Subtask(1, "Subtask1 name",
                 "Subtask1 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 15, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 15, 0),
                 Duration.ofMinutes(30));
 
         Subtask subtask2 = new Subtask(2, "Subtask2 name",
                 "Subtask2 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 16, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 16, 0),
                 Duration.ofMinutes(30));
 
         Subtask subtask3 = new Subtask(3, "Subtask3 name",
                 "Subtask3 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 17, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 17, 0),
                 Duration.ofMinutes(30));
 
         manager.addSubtask(subtask1);

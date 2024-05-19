@@ -42,7 +42,7 @@ public class HttpTaskManagerPrioritizedTest {
     }
 
     @Test
-    public void testGetPrioritized() throws IOException, InterruptedException, IntersectionException, NotFoundException {
+    public void testGetPrioritized() throws IOException, InterruptedException, IntersectionException {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
