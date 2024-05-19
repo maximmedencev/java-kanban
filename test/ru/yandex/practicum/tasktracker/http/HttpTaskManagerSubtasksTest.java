@@ -1,6 +1,7 @@
 package ru.yandex.practicum.tasktracker.http;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +33,10 @@ public class HttpTaskManagerSubtasksTest {
     }
 
     @BeforeEach
-    public void setUp() throws IntersectionException, IOException {
+    public void setUp() {
+        gson = new GsonBuilder()
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .create();
         manager.removeAllTasks();
         manager.removeAllSubtasks();
         manager.removeAllEpics();
@@ -81,6 +85,7 @@ public class HttpTaskManagerSubtasksTest {
 
         List<Subtask> subtasksFromManager = manager.getSubtasksList();
         List<Subtask> subtasksFromResponse = gson.fromJson(response.body(), new SubtaskListTypeToken().getType());
+
 
         assertTrue(SubtaskTest.subtasksFieldsEquals(subtasksFromManager.get(0), subtasksFromResponse.get(0)),
                 "Поля задач не совпадают");

@@ -1,6 +1,7 @@
 package ru.yandex.practicum.tasktracker.http;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,11 @@ public class HttpTaskManagerPrioritizedTest {
     }
 
     @BeforeEach
-    public void setUp() throws IntersectionException, IOException {
+    public void setUp() {
+        gson = new GsonBuilder()
+                .registerTypeAdapter(HttpTaskManagerHistoryTest.type,
+                        new HttpTaskManagerHistoryTest.JsonResponseDeserialize())
+                .create();
         manager.removeAllTasks();
         manager.removeAllSubtasks();
         manager.removeAllEpics();
@@ -46,19 +51,19 @@ public class HttpTaskManagerPrioritizedTest {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 15, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 15, 0),
                 Duration.ofMinutes(30));
 
         Task task2 = new Task(2, "Task2 name",
                 "Task2 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 16, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 16, 0),
                 Duration.ofMinutes(30));
 
         Task task3 = new Task(3, "Task3 name",
                 "Task3 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 17, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 17, 0),
                 Duration.ofMinutes(30));
 
         Epic epic1 = new Epic(4, "Epic1 name",
@@ -70,19 +75,19 @@ public class HttpTaskManagerPrioritizedTest {
         Subtask subtask1 = new Subtask(6, epic1.getId(), "Subtask1 name",
                 "Subtask1 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 18, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 18, 0),
                 Duration.ofMinutes(30));
 
         Subtask subtask2 = new Subtask(7, epic1.getId(), "Subtask2 name",
                 "Subtask2 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 19, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 19, 0),
                 Duration.ofMinutes(30));
 
         Subtask subtask3 = new Subtask(8, epic1.getId(), "Subtask3 name",
                 "Subtask3 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 20, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 20, 0),
                 Duration.ofMinutes(30));
 
         manager.addEpic(epic1);
@@ -106,7 +111,7 @@ public class HttpTaskManagerPrioritizedTest {
         // проверяем код ответа
         assertEquals(200, response.statusCode());
 
-        List<? extends Task> allTasksFromResponse = HttpTaskManagerHistoryTest.getDataFromJson(response.body());
+        List<? extends Task> allTasksFromResponse = gson.fromJson(response.body(), HttpTaskManagerHistoryTest.type);
 
         assertTrue(TaskTest.taskFieldsEquals(allTasksFromResponse.get(0), task1),
                 "Задача не найдена в проритизированном списке");

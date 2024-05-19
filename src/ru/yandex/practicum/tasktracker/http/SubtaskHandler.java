@@ -1,6 +1,7 @@
 package ru.yandex.practicum.tasktracker.http;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import ru.yandex.practicum.tasktracker.IntersectionException;
@@ -11,6 +12,7 @@ import ru.yandex.practicum.tasktracker.TaskManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -28,6 +30,10 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         String path = exchange.getRequestURI().getPath();
         String requestMethod = exchange.getRequestMethod();
+
+        gson = new GsonBuilder()
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .create();
 
         if (path.charAt(path.length() - 1) == '/')
             path = path.substring(0, path.length() - 1);

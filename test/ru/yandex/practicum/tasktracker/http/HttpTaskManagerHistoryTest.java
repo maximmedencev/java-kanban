@@ -28,11 +28,18 @@ public class HttpTaskManagerHistoryTest {
     HttpTaskServer taskServer = new HttpTaskServer(manager);
     public static Gson gson = HttpTaskServer.getGson();
 
+    public static Type type = new TypeToken<List<? extends Task>>() {
+    }.getType();
+
+
     public HttpTaskManagerHistoryTest() throws IOException {
     }
 
     @BeforeEach
-    public void setUp() throws IntersectionException, IOException {
+    public void setUp() {
+        gson = new GsonBuilder()
+                .registerTypeAdapter(type, new JsonResponseDeserialize())
+                .create();
         manager.removeAllTasks();
         manager.removeAllSubtasks();
         manager.removeAllEpics();
@@ -45,6 +52,10 @@ public class HttpTaskManagerHistoryTest {
     }
 
     public static class JsonResponseDeserialize implements JsonDeserializer<List<? extends Task>> {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .create();
+
         @Override
         public List<? extends Task> deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
             List<Task> listToReturn = new ArrayList<>();
@@ -76,34 +87,24 @@ public class HttpTaskManagerHistoryTest {
         }
     }
 
-    public static List<? extends Task> getDataFromJson(String jsonString) {
-        Type type = new TypeToken<List<? extends Task>>() {
-        }.getType();
-        GsonBuilder gb = new GsonBuilder();
-        gb.registerTypeAdapter(type, new JsonResponseDeserialize());
-        Gson gson = gb.create();
-        List<? extends Task> listToReturn = gson.fromJson(jsonString, type);
-        return listToReturn;
-    }
-
     @Test
     public void testGetHistory() throws IOException, InterruptedException, IntersectionException, NotFoundException {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 15, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 15, 0),
                 Duration.ofMinutes(30));
 
         Task task2 = new Task(2, "Task2 name",
                 "Task2 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 16, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 16, 0),
                 Duration.ofMinutes(30));
 
         Task task3 = new Task(3, "Task3 name",
                 "Task3 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 17, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 17, 0),
                 Duration.ofMinutes(30));
 
         Epic epic1 = new Epic(4, "Epic1 name",
@@ -115,19 +116,19 @@ public class HttpTaskManagerHistoryTest {
         Subtask subtask1 = new Subtask(6, epic1.getId(), "Subtask1 name",
                 "Subtask1 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 18, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 18, 0),
                 Duration.ofMinutes(30));
 
         Subtask subtask2 = new Subtask(7, epic1.getId(), "Subtask2 name",
                 "Subtask2 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 19, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 19, 0),
                 Duration.ofMinutes(30));
 
         Subtask subtask3 = new Subtask(8, epic1.getId(), "Subtask3 name",
                 "Subtask3 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 20, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 20, 0),
                 Duration.ofMinutes(30));
 
         manager.addEpic(epic1);
@@ -155,7 +156,7 @@ public class HttpTaskManagerHistoryTest {
         // проверяем код ответа
         assertEquals(200, response.statusCode());
 
-        List<? extends Task> allTasksFromResponse = getDataFromJson(response.body());
+        List<? extends Task> allTasksFromResponse = gson.fromJson(response.body(), type);
 
         assertTrue((TaskTest.taskFieldsEquals(allTasksFromResponse.get(0), task1)),
                 "Задача находится на неверном месте или отсутствует в истории");

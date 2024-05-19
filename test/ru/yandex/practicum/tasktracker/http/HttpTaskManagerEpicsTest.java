@@ -1,6 +1,7 @@
 package ru.yandex.practicum.tasktracker.http;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +33,10 @@ public class HttpTaskManagerEpicsTest {
     }
 
     @BeforeEach
-    public void setUp() throws IntersectionException, IOException {
+    public void setUp() {
+        gson = new GsonBuilder()
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .create();
         manager.removeAllTasks();
         manager.removeAllSubtasks();
         manager.removeAllEpics();
@@ -134,19 +138,19 @@ public class HttpTaskManagerEpicsTest {
         Subtask subtask1 = new Subtask(1, epic1.getId(), "Subtask1 name",
                 "Subtask1 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 15, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 15, 0),
                 Duration.ofMinutes(30));
 
         Subtask subtask2 = new Subtask(2, epic1.getId(), "Subtask2 name",
                 "Subtask2 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 16, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 16, 0),
                 Duration.ofMinutes(30));
 
         Subtask subtask3 = new Subtask(3, epic1.getId(), "Subtask3 name",
                 "Subtask3 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 17, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 17, 0),
                 Duration.ofMinutes(30));
 
         manager.addEpic(epic1);
@@ -216,19 +220,19 @@ public class HttpTaskManagerEpicsTest {
         Subtask subtask1 = new Subtask(1, epic1.getId(), "Subtask1 name",
                 "Subtask1 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 15, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 15, 0),
                 Duration.ofMinutes(30));
 
         Subtask subtask2 = new Subtask(2, epic1.getId(), "Subtask2 name",
                 "Subtask2 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 16, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 16, 0),
                 Duration.ofMinutes(30));
 
         Subtask subtask3 = new Subtask(3, epic1.getId(), "Subtask3 name",
                 "Subtask3 description",
                 TaskStatus.NEW,
-                LocalDateTime.of(2024, 5, 2, 17, 0, 0),
+                LocalDateTime.of(2024, 5, 2, 17, 0),
                 Duration.ofMinutes(30));
 
         manager.addEpic(epic1);
