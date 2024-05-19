@@ -8,6 +8,7 @@ import ru.yandex.practicum.tasktracker.TaskManager;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.regex.Pattern;
 
 public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
@@ -27,6 +28,7 @@ public class PrioritizedHandler extends BaseHttpHandler implements HttpHandler {
 
         gson = new GsonBuilder()
                 .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .create();
 
         if (path.charAt(path.length() - 1) == '/')

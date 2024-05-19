@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -33,6 +34,7 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
 
         gson = new GsonBuilder()
                 .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .create();
 
         if (path.charAt(path.length() - 1) == '/')

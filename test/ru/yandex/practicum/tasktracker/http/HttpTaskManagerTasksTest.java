@@ -36,6 +36,7 @@ public class HttpTaskManagerTasksTest {
     public void setUp() {
         gson = new GsonBuilder()
                 .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .create();
         manager.removeAllTasks();
         manager.removeAllSubtasks();

@@ -54,6 +54,7 @@ public class HttpTaskManagerHistoryTest {
     public static class JsonResponseDeserialize implements JsonDeserializer<List<? extends Task>> {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .create();
 
         @Override
