@@ -41,7 +41,6 @@ public class InMemoryHistoryManager implements HistoryManager {
             next.setPrev(prev);
             node.setNext(null);
         }
-
     }
 
     @Override

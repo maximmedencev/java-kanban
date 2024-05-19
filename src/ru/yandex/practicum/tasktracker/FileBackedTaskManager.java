@@ -12,16 +12,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File saveFile;
     public static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
-    public FileBackedTaskManager(File saveFile) {
+    public FileBackedTaskManager(File saveFile) throws IntersectionException {
         this.saveFile = saveFile;
         load();
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) {
+    public static FileBackedTaskManager loadFromFile(File file) throws IntersectionException {
         return new FileBackedTaskManager(file);
     }
 
-    private void load() {
+    private void load() throws IntersectionException {
         String saveData;
         if (saveFile.exists() && !saveFile.isDirectory()) {
             try {
@@ -48,8 +48,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     }
 
                     if (task.getClass() == Subtask.class) {
-                        epics.get(((Subtask) task).getEpicId()).addSubtaskId(task.getId());
-                        super.addSubtask((task).getId(), ((Subtask) task).getEpicId(), ((Subtask) task));
+                        if (epics.containsKey(((Subtask) task).getEpicId())) {
+                            epics.get(((Subtask) task).getEpicId()).addSubtaskId(task.getId());
+                            super.addSubtask((task).getId(), ((Subtask) task).getEpicId(), ((Subtask) task));
+                        } else {
+                            super.addSubtask((Subtask) task);
+                        }
                     }
                 }
                 super.newTaskId = maxIndex + 1;
@@ -58,7 +62,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void addTask(Task task) {
+    public void addTask(Task task) throws IntersectionException {
         super.addTask(task);
         save();
     }
@@ -70,8 +74,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void addSubtask(int epicId, Subtask subtask) {
+    public void addSubtask(int epicId, Subtask subtask) throws IntersectionException {
         super.addSubtask(epicId, subtask);
+        save();
+    }
+
+    @Override
+    public void addSubtask(Subtask subtask) throws IntersectionException {
+        super.addSubtask(subtask);
         save();
     }
 
@@ -162,7 +172,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateTask(Task task) {
+    public void updateTask(Task task) throws IntersectionException {
         super.updateTask(task);
         save();
     }
@@ -174,9 +184,26 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) {
+    public void updateSubtask(Subtask subtask) throws IntersectionException {
         super.updateSubtask(subtask);
         save();
     }
 
+    @Override
+    public void removeTask(int taskId) {
+        super.removeTask(taskId);
+        save();
+    }
+
+    @Override
+    public void removeEpic(int epicId) {
+        super.removeEpic(epicId);
+        save();
+    }
+
+    @Override
+    public void removeSubtask(int subtaskId) {
+        super.removeSubtask(subtaskId);
+        save();
+    }
 }

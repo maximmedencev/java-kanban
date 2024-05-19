@@ -8,7 +8,7 @@ import ru.yandex.practicum.tasktracker.TaskStatus;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-class TaskTest {
+public class TaskTest {
     public static boolean taskFieldsEquals(Task task1, Task task2) {
         return (task1.getId() == task2.getId())
                 && (task1.getName().equals(task2.getName()))

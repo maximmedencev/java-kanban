@@ -1,4 +1,7 @@
 package ru.yandex.practicum.tasktracker;
 
-public class IntersectionException {
+public class IntersectionException extends Exception{
+    public IntersectionException(final String message){
+        super(message);
+    }
 }

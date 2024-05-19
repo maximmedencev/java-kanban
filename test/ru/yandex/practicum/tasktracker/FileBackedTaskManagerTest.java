@@ -17,13 +17,10 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     FileBackedTaskManager fileBackedTaskManager;
     File saveFile;
 
-    public void setup() throws IOException{
+    @BeforeEach
+    public void setUp() throws IOException, IntersectionException {
         saveFile = File.createTempFile("java-kanban-save-test", ".csv");
         super.taskManager = FileBackedTaskManager.loadFromFile(saveFile);
-    }
-    @BeforeEach
-    public void beforeEach() throws IOException {
-        setup();
     }
 
     @Test
@@ -40,7 +37,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
 
 
     @Test
-    public void taskListsShouldBeEmptyForEmptySaveFile() {
+    public void taskListsShouldBeEmptyForEmptySaveFile() throws IntersectionException {
         fileBackedTaskManager = FileBackedTaskManager.loadFromFile(saveFile);
         Assertions.assertTrue(fileBackedTaskManager.getTasksList().isEmpty(), "Список задач не пустой!");
         Assertions.assertTrue(fileBackedTaskManager.getEpicsList().isEmpty(), "Список эпиков не пустой!");
@@ -48,7 +45,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
 
     @Test
-    public void fileShouldBeEmptyForEmptyTaskLists() throws IOException {
+    public void fileShouldBeEmptyForEmptyTaskLists() throws IOException, IntersectionException {
         fileBackedTaskManager = FileBackedTaskManager.loadFromFile(saveFile);
         String saveData;
         saveData = Files.readString(saveFile.toPath());
@@ -56,7 +53,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
 
     @Test
-    public void fileAndTaskListsShouldHaveSameDataAfterLoad() throws IOException {
+    public void fileAndTaskListsShouldHaveSameDataAfterLoad() throws IOException, IntersectionException {
         String data =
                 "id,type,name,status,description,epic\n" +
                         "1,TASK,Имя таска 1,NEW,Описание таска 1,\n" +
@@ -125,7 +122,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
 
     @Test
-    public void fileAndTaskListsShouldHaveSameDataAfterSave() throws IOException {
+    public void fileAndTaskListsShouldHaveSameDataAfterSave() throws IOException, IntersectionException {
         fileBackedTaskManager = FileBackedTaskManager.loadFromFile(saveFile);
         Epic epic1 = new Epic("Тестовый эпик №1",
                 "Описание эпик №1");
@@ -133,19 +130,19 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
         Subtask subtask1 = new Subtask("Тестовый сабтаск №1",
                 "Описание сабтаск №1",
                 TaskStatus.NEW,
-                LocalDateTime.now(),
+                LocalDateTime.of(2024, 5, 2, 11, 0, 0),
                 Duration.ofMinutes(10));
         fileBackedTaskManager.addSubtask(epic1.getId(), subtask1);
         Subtask subtask2 = new Subtask("Тестовый сабтаск №2",
                 "Описание сабтаск №2",
                 TaskStatus.DONE,
-                LocalDateTime.now(),
+                LocalDateTime.of(2024, 5, 2, 12, 0, 0),
                 Duration.ofMinutes(30));
         fileBackedTaskManager.addSubtask(epic1.getId(), subtask2);
         Task task1 = new Task("Тестовый таск №1",
                 "Описание таск №1",
                 TaskStatus.DONE,
-                LocalDateTime.now(),
+                LocalDateTime.of(2024, 5, 2, 13, 0, 0),
                 Duration.ofMinutes(30));
         fileBackedTaskManager.addTask(task1);
 

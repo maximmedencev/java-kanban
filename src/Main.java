@@ -1,4 +1,5 @@
 import ru.yandex.practicum.tasktracker.FileBackedTaskManager;
+import ru.yandex.practicum.tasktracker.IntersectionException;
 import ru.yandex.practicum.tasktracker.TaskManager;
 
 import java.io.File;
@@ -24,7 +25,7 @@ public class Main {
         manager.getHistory().forEach(System.out::println);
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IntersectionException {
         File file = new File("java-kanban-save.csv");
         fileBackedTaskManager = FileBackedTaskManager.loadFromFile(file);
         System.out.println("Начало работы программы...");

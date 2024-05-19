@@ -1,7 +1,6 @@
 package ru.yandex.practicum.tasktracker;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface TaskManager {
     List<Task> getHistory();
@@ -24,11 +23,13 @@ public interface TaskManager {
 
     void removeSubtask(int subtaskId);
 
-    void addTask(Task task);
+    void addTask(Task task) throws IntersectionException;
 
     void addEpic(Epic epic);
 
-    void addSubtask(int epicId, Subtask subtask);
+    void addSubtask(Subtask subtask) throws IntersectionException;
+
+    void addSubtask(int epicId, Subtask subtask) throws IntersectionException;
 
     int addTask(int id, Task task);
 
@@ -36,19 +37,19 @@ public interface TaskManager {
 
     int addSubtask(int id, int epicId, Subtask subtask);
 
-    Optional<Task> getTask(int id);
+    Task getTask(int id) throws NotFoundException;
 
-    Optional<Epic> getEpic(int id);
+    Epic getEpic(int id) throws NotFoundException;
 
-    Optional<Subtask> getSubtask(int id);
+    Subtask getSubtask(int id) throws NotFoundException;
 
-    List<Task> getEpicSubtaskList(int id);
+    List<Subtask> getEpicSubtaskList(int id);
 
-    void updateTask(Task task);
+    void updateTask(Task task) throws IntersectionException;
 
     void updateEpic(Epic epic);
 
-    void updateSubtask(Subtask subtask);
+    void updateSubtask(Subtask subtask) throws IntersectionException;
 
     void updateEpicStatus(Epic epic);
 

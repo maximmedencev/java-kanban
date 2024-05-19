@@ -21,7 +21,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    public void shouldHaveOneTaskAfterDuplicating() {
+    public void shouldHaveOneTaskAfterDuplicating() throws IntersectionException, NotFoundException {
         Task task1 = new Task(1,
                 "Name1",
                 "Description1",
@@ -41,7 +41,7 @@ class InMemoryHistoryManagerTest {
     //задачи, добавляемые в HistoryManager, сохраняют значения полей
     //HistoryManager сохраняет новый объект задачи на место старого с тем же Id
     @Test
-    public void taskFieldsAreTheSameAfterSavingToHistory() {
+    public void taskFieldsAreTheSameAfterSavingToHistory() throws NotFoundException {
 
         Task task1 = new Task(1, "Name1", "Description1", TaskStatus.NEW, LocalDateTime.now(), Duration.ofMinutes(30));
         inMemoryTaskManager.addTask(1, task1);
@@ -62,7 +62,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    public void historyListShouldHave0SizeAfterRemoveLastTaskFromIt() {
+    public void historyListShouldHave0SizeAfterRemoveLastTaskFromIt() throws IntersectionException, NotFoundException {
         Task task1 = new Task(1,
                 "Name1",
                 "Description1",
@@ -77,7 +77,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    public void tasksShouldHaveSameFieldsAfterRemovingFromMiddleOfHistoryList() {
+    public void tasksShouldHaveSameFieldsAfterRemovingFromMiddleOfHistoryList() throws IntersectionException, NotFoundException {
         Task task1 = new Task(1,
                 "Name1",
                 "Description1",
@@ -115,7 +115,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    public void tasksShouldHaveSameFieldsAfterRemovingFromHistoryListTail() {
+    public void tasksShouldHaveSameFieldsAfterRemovingFromHistoryListTail() throws IntersectionException, NotFoundException {
         Task task1 = new Task(1,
                 "Name1",
                 "Description1",
@@ -156,7 +156,7 @@ class InMemoryHistoryManagerTest {
     }
 
     @Test
-    public void tasksShouldHaveSameFieldsAfterRemovingFromHistoryListHead() {
+    public void tasksShouldHaveSameFieldsAfterRemovingFromHistoryListHead() throws IntersectionException, NotFoundException {
         Task task1 = new Task(1,
                 "Name1",
                 "Description1",

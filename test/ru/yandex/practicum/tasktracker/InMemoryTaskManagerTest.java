@@ -9,29 +9,25 @@ import java.time.LocalDateTime;
 
 class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
-    public void setup() {
-        super.taskManager = (InMemoryTaskManager) Managers.getDefault();
-    }
-
     @BeforeEach
-    public void beforeEach() {
-        setup();
+    public void setUp() {
+        super.taskManager = (InMemoryTaskManager) Managers.getDefault();
     }
 
     //InMemoryTaskManager действительно добавляет задачи разного типа и может найти их по id;
     @Test
-    public void inMemoryTaskManagerShouldAddAndSeekTasks() {
+    public void inMemoryTaskManagerShouldAddAndSeekTasks() throws IntersectionException, NotFoundException {
         Task task1 = new Task("Name", "Description");
         super.taskManager.addTask(task1);
         Assertions.assertNotNull(super.taskManager.getTask(task1.getId()), "task равен null");
-        Assertions.assertEquals(task1.getId(), super.taskManager.getTask(task1.getId()).get().getId(),
+        Assertions.assertEquals(task1.getId(), super.taskManager.getTask(task1.getId()).getId(),
                 "по заданному id не содержится нужного объекта");
 
     }
 
     //InMemoryTaskManager действительно добавляет задачи разного типа и может найти их по id;
     @Test
-    public void inMemoryTaskManagerShouldAddAndSeekSubtasks() {
+    public void inMemoryTaskManagerShouldAddAndSeekSubtasks() throws IntersectionException, NotFoundException {
         Epic epic1 = new Epic("Name", "Description");
         Subtask subtask1 = new Subtask("Name",
                 "Description",
@@ -43,25 +39,25 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
         Assertions.assertNotNull(super.taskManager.getSubtask(subtask1.getId()),
                 "subtask равен null");
         Assertions.assertEquals(subtask1Id,
-                super.taskManager.getSubtask(subtask1.getId()).get().getId(),
+                super.taskManager.getSubtask(subtask1.getId()).getId(),
                 "по заданному id не содержится нужного объекта");
     }
 
     //InMemoryTaskManager действительно добавляет задачи разного типа и может найти их по id;
     @Test
-    public void inMemoryTaskManagerShouldAddAndSeekEpics() {
+    public void inMemoryTaskManagerShouldAddAndSeekEpics() throws NotFoundException {
         Epic epic1 = new Epic("Name", "Description");
         super.taskManager.addEpic(epic1);
         int epic1Id = epic1.getId();
         Assertions.assertNotNull(super.taskManager.getEpic(epic1Id),
                 "epic равен null");
-        Assertions.assertEquals(epic1Id, super.taskManager.getEpic(epic1.getId()).get().getId(),
+        Assertions.assertEquals(epic1Id, super.taskManager.getEpic(epic1.getId()).getId(),
                 "по заданному id не содержится нужного объекта");
     }
 
     //задачи с заданным id и сгенерированным id не конфликтуют внутри менеджера
     @Test
-    public void shouldReturnMinus1IfTasksIdsConflict() {
+    public void shouldReturnMinus1IfTasksIdsConflict() throws IntersectionException {
         Task task1 = new Task("Name1", "Description1");
         Task task2 = new Task("Name2", "Description2");
         super.taskManager.addTask(task1);
@@ -131,7 +127,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
     }
 
     @Test
-    public void shouldNotBeNotActualSubtasksIdsAfterRemoving() {
+    public void shouldNotBeNotActualSubtasksIdsAfterRemoving() throws NotFoundException {
         Epic epic1 = new Epic("Name1", "Description1");
         super.taskManager.addEpic(1, epic1);
         Subtask subtask1 = new Subtask(2,
@@ -163,12 +159,12 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
         super.taskManager.removeSubtask(3);
         super.taskManager.removeSubtask(4);
 
-        Assertions.assertFalse(super.taskManager.getEpic(1).get().getSubtasksIds().contains(3));
-        Assertions.assertFalse(super.taskManager.getEpic(1).get().getSubtasksIds().contains(4));
+        Assertions.assertFalse(super.taskManager.getEpic(1).getSubtasksIds().contains(3));
+        Assertions.assertFalse(super.taskManager.getEpic(1).getSubtasksIds().contains(4));
     }
 
     @Test
-    public void taskShouldNotBeAddedWhenIntersects() {
+    public void taskShouldNotBeAddedWhenIntersects() throws IntersectionException {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
@@ -188,7 +184,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
                 Duration.ofMinutes(30));
 
         super.taskManager.addTask(task1);
-        super.taskManager.addTask(task2);
+        Assertions.assertThrows(IntersectionException.class, () -> super.taskManager.addTask(task2));
         super.taskManager.addTask(task3);
 
         Assertions.assertTrue(super.taskManager.getTasksList().contains(task1));

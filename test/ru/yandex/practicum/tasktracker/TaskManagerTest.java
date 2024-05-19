@@ -11,7 +11,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    List<Task> getHistory();
     @Test
-    public void shouldReturnHistoryListWithSpecifiedTasks() {
+    public void shouldReturnHistoryListWithSpecifiedTasks() throws IntersectionException, NotFoundException {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
@@ -55,7 +55,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    List<Task> getTasksList();
     @Test
-    public void shouldReturnListWithSpecifiedTasks() {
+    public void shouldReturnListWithSpecifiedTasks() throws IntersectionException {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
@@ -118,7 +118,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    List<Task> getSubtasksList();
     @Test
-    public void shouldReturnListWithSpecifiedSubtasks() {
+    public void shouldReturnListWithSpecifiedSubtasks() throws IntersectionException {
 
         Epic epic1 = new Epic("Epic1 name", "Epic1 description");
 
@@ -155,7 +155,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    void removeAllTasks();
     @Test
-    public void shouldHaveZeroSizeIfAllTasksRemoved() {
+    public void shouldHaveZeroSizeIfAllTasksRemoved() throws IntersectionException {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
@@ -207,7 +207,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    void removeAllSubtasks();
     @Test
-    public void shouldHaveZeroSizeIfAllSubtasksRemoved() {
+    public void shouldHaveZeroSizeIfAllSubtasksRemoved() throws IntersectionException {
         Epic epic1 = new Epic("Epic1 name", "Epic1 description");
         Subtask subtask1 = new Subtask("Subtask1 name",
                 "Subtask1 description",
@@ -312,7 +312,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    void addTask(Task task);
     @Test
-    public void shouldHaveSpecifiedTaskAfterAdd() {
+    public void shouldHaveSpecifiedTaskAfterAdd() throws IntersectionException {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
@@ -335,7 +335,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    void addSubtask(int epicId, Subtask subtask);
     @Test
-    public void shouldHaveSpecifiedSubtaskAfterAdd() {
+    public void shouldHaveSpecifiedSubtaskAfterAdd() throws IntersectionException {
         Epic epic1 = new Epic("Epic1 name", "Epic1 description");
         Subtask subtask1 = new Subtask("Subtask1 name",
                 "Subtask1 description",
@@ -351,33 +351,33 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    int addTask(int id, Task task);
     @Test
-    public void shouldHaveTaskWithSpecifiedIdAfterAdd() {
+    public void shouldHaveTaskWithSpecifiedIdAfterAdd() throws NotFoundException {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
                 LocalDateTime.of(2024, 5, 2, 12, 0, 0),
                 Duration.ofMinutes(30));
         taskManager.addTask(1, task1);
-        Assertions.assertEquals(task1, taskManager.getTask(1).get(), "Добавленная подзадача не найдена");
+        Assertions.assertEquals(task1, taskManager.getTask(1), "Добавленная подзадача не найдена");
         Assertions.assertTrue(TaskTest.taskFieldsEquals(task1,
-                        taskManager.getTask(1).get()),
+                        taskManager.getTask(1)),
                 "Поля добавленной и запрошенной задачи не совпадают");
     }
 
     //    int addEpic(int id, Epic epic);
     @Test
-    public void shouldHaveEpicWithSpecifiedIdAfterAdd() {
+    public void shouldHaveEpicWithSpecifiedIdAfterAdd() throws NotFoundException {
         Epic epic1 = new Epic("Epic1 name", "Epic1 description");
         taskManager.addEpic(1, epic1);
-        Assertions.assertEquals(epic1, taskManager.getEpic(1).get(), "Добавленный эпик не найден");
-        Assertions.assertTrue(EpicTest.epicsFieldsEquals(epic1, taskManager.getEpic(1).get()),
+        Assertions.assertEquals(epic1, taskManager.getEpic(1), "Добавленный эпик не найден");
+        Assertions.assertTrue(EpicTest.epicsFieldsEquals(epic1, taskManager.getEpic(1)),
                 "Поля добавленного и запрошенного эпика не совпадают");
     }
 
     //    int addSubtask(int id, int epicId, Subtask subtask);
     //задачи с заданным id и сгенерированным id не конфликтуют внутри менеджера
     @Test
-    public void shouldReturnMinus1IfSubtasksIdsConflict() {
+    public void shouldReturnMinus1IfSubtasksIdsConflict() throws IntersectionException {
         Subtask subtask1 = new Subtask("Name1",
                 "Description1",
                 TaskStatus.NEW,
@@ -396,7 +396,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnMinus2WhenNull() {
+    public void shouldReturnMinus2WhenNull() throws IntersectionException {
         Subtask subtask1 = new Subtask("Name1",
                 "Description1",
                 TaskStatus.NEW,
@@ -412,7 +412,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnMinus3WhenSubtasksIntersects() {
+    public void shouldReturnMinus3WhenSubtasksIntersects() throws IntersectionException {
         Subtask subtask1 = new Subtask(1,
                 "Name1",
                 "Description1",
@@ -435,7 +435,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    Task getTask(int id);
     @Test
-    public void shouldGetTaskWithSpecifiedId() {
+    public void shouldGetTaskWithSpecifiedId() throws NotFoundException {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
@@ -443,29 +443,29 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 Duration.ofMinutes(30));
 
         taskManager.addTask(1, task1);
-        Assertions.assertEquals(task1, taskManager.getTask(1).get(),
+        Assertions.assertEquals(task1, taskManager.getTask(1),
                 "У запрошенной и добавленной задачи не совпадают id");
         Assertions.assertTrue(TaskTest.taskFieldsEquals(
                         task1,
-                        taskManager.getTask(1).get()),
+                        taskManager.getTask(1)),
                 "Поля запрошенной и ожидаемой задачи не совпадапют");
     }
 
     //    Epic getEpic(int id);
     @Test
-    public void shouldGetEpicWithSpecifiedId() {
+    public void shouldGetEpicWithSpecifiedId() throws NotFoundException {
         Epic epic1 = new Epic("Epic1 name", "Epic1 description");
         taskManager.addEpic(1, epic1);
         Assertions.assertEquals(epic1,
-                taskManager.getEpic(1).get(),
+                taskManager.getEpic(1),
                 "У запрошенного и добавленного эпика не совпадают id");
-        Assertions.assertTrue(EpicTest.epicsFieldsEquals(epic1, taskManager.getEpic(1).get()),
+        Assertions.assertTrue(EpicTest.epicsFieldsEquals(epic1, taskManager.getEpic(1)),
                 "Поля запрошенного и ожидаемого эпиков не совпадапют");
     }
 
     //    Subtask getSubtask(int id);
     @Test
-    public void shouldGetSubtaskWithSpecifiedId() {
+    public void shouldGetSubtaskWithSpecifiedId() throws IntersectionException, NotFoundException {
         Epic epic1 = new Epic("Epic1 name", "Epic1 description");
         Subtask subtask1 = new Subtask(1,
                 "Name1",
@@ -475,8 +475,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 Duration.ofMinutes(30));
         taskManager.addEpic(1, epic1);
         taskManager.addSubtask(1, subtask1);
-        Assertions.assertEquals(subtask1, taskManager.getSubtask(1).get());
-        Assertions.assertTrue(SubtaskTest.subtasksFieldsEquals(subtask1, taskManager.getSubtask(1).get()),
+        Assertions.assertEquals(subtask1, taskManager.getSubtask(1));
+        Assertions.assertTrue(SubtaskTest.subtasksFieldsEquals(subtask1, taskManager.getSubtask(1)),
                 "Поля запрошенной и ожидаемой подзадачи не совпадапют");
     }
 
@@ -511,7 +511,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    void updateTask(Task task);
     @Test
-    public void shouldReturnNewTaskAfterUpdate() {
+    public void shouldReturnNewTaskAfterUpdate() throws IntersectionException, NotFoundException {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
@@ -528,16 +528,16 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.updateTask(task2);
 
         Assertions.assertFalse(TaskTest.taskFieldsEquals(task1,
-                        taskManager.getTask(1).get()),
+                        taskManager.getTask(1)),
                 "После обновления задача осталась прежней");
         Assertions.assertTrue(TaskTest.taskFieldsEquals(task2,
-                        taskManager.getTask(1).get()),
+                        taskManager.getTask(1)),
                 "Задача не равена обновленной");
     }
 
     //    void updateEpic(Epic epic);
     @Test
-    public void shouldReturnNewEpicAfterUpdate() {
+    public void shouldReturnNewEpicAfterUpdate() throws NotFoundException {
         Epic epic1 = new Epic(1, "Epic1 name", "Epic1 description");
         Epic epic2 = new Epic(1, "Epic2 name", "Epic2 description");
 
@@ -546,17 +546,17 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         Assertions.assertFalse(EpicTest.epicsFieldsEquals(
                         epic1,
-                        taskManager.getEpic(1).get()),
+                        taskManager.getEpic(1)),
                 "После обновления эпик остался прежним");
         Assertions.assertTrue(EpicTest.epicsFieldsEquals(
                         epic2,
-                        taskManager.getEpic(1).get()),
+                        taskManager.getEpic(1)),
                 "Поля запрошенного и нового эпика не свопадают");
     }
 
     //    void updateSubtask(Subtask subtask);
     @Test
-    public void shouldReturnNewSubtaskAfterUpdate() {
+    public void shouldReturnNewSubtaskAfterUpdate() throws NotFoundException, IntersectionException {
         Subtask subtask1 = new Subtask(2,
                 "Name1",
                 "Description1",
@@ -577,10 +577,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.updateSubtask(subtask2);
 
         Assertions.assertFalse(SubtaskTest.subtasksFieldsEquals(
-                        subtask1, taskManager.getSubtask(2).get()),
+                        subtask1, taskManager.getSubtask(2)),
                 "После обновления подзадача не изменилась");
         Assertions.assertTrue(SubtaskTest.subtasksFieldsEquals(subtask2,
-                        taskManager.getSubtask(2).get()),
+                        taskManager.getSubtask(2)),
                 "Поля запрошенной и новой подзадачи не свопадают");
     }
 
