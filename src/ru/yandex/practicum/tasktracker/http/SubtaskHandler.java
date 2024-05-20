@@ -2,7 +2,6 @@ package ru.yandex.practicum.tasktracker.http;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import ru.yandex.practicum.tasktracker.IntersectionException;
 import ru.yandex.practicum.tasktracker.NotFoundException;
 import ru.yandex.practicum.tasktracker.Subtask;
@@ -14,10 +13,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
+public class SubtaskHandler extends BaseHttpHandler {
 
-    protected Gson gson;
-    protected TaskManager taskManager;
+    private Gson gson;
+    private TaskManager taskManager;
 
     public SubtaskHandler(Gson gson, TaskManager taskManager) {
         this.gson = gson;
@@ -54,20 +53,16 @@ public class SubtaskHandler extends BaseHttpHandler implements HttpHandler {
                 InputStream inputStream = exchange.getRequestBody();
                 String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                 Subtask subtask = gson.fromJson(body, Subtask.class);
-                if (subtask.getId() == 0) {
-                    try {
+                try {
+                    if (subtask.getId() == 0) {
                         taskManager.addSubtask(subtask);
-                    } catch (IntersectionException e) {
-                        super.sendHasInteractions(exchange, "Подзадача пересекается с существующими");
-                    }
-                    super.sendText(exchange, "Подзадача успешно добавлена");
-                } else {
-                    try {
+                        super.sendText(exchange, "Подзадача успешно добавлена");
+                    } else {
                         taskManager.updateSubtask(subtask);
-                    } catch (IntersectionException e) {
-                        super.sendHasInteractions(exchange, "Подзадача пересекается с существующими");
+                        super.sendText(exchange, "Подзадача успешно обновлена");
                     }
-                    super.sendText(exchange, "Подзадача успешно обновлена");
+                } catch (IntersectionException e) {
+                    super.sendHasInteractions(exchange, "Подзадача пересекается с существующими");
                 }
                 break;
             }

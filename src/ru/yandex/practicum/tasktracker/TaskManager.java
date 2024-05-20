@@ -23,13 +23,13 @@ public interface TaskManager {
 
     void removeSubtask(int subtaskId);
 
-    void addTask(Task task) throws IntersectionException;
+    void addTask(Task task);
 
     void addEpic(Epic epic);
 
-    void addSubtask(Subtask subtask) throws IntersectionException;
+    void addSubtask(Subtask subtask);
 
-    void addSubtask(int epicId, Subtask subtask) throws IntersectionException;
+    void addSubtask(int epicId, Subtask subtask);
 
     int addTask(int id, Task task);
 
@@ -37,19 +37,19 @@ public interface TaskManager {
 
     int addSubtask(int id, int epicId, Subtask subtask);
 
-    Task getTask(int id) throws NotFoundException;
+    Task getTask(int id);
 
-    Epic getEpic(int id) throws NotFoundException;
+    Epic getEpic(int id);
 
-    Subtask getSubtask(int id) throws NotFoundException;
+    Subtask getSubtask(int id);
 
     List<Subtask> getEpicSubtaskList(int id);
 
-    void updateTask(Task task) throws IntersectionException;
+    void updateTask(Task task);
 
     void updateEpic(Epic epic);
 
-    void updateSubtask(Subtask subtask) throws IntersectionException;
+    void updateSubtask(Subtask subtask);
 
     void updateEpicStatus(Epic epic);
 

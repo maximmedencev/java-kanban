@@ -1,21 +1,19 @@
 package ru.yandex.practicum.tasktracker.http;
 
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.tasktracker.*;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,22 +21,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HttpTaskManagerHistoryTest {
     // создаём экземпляр InMemoryTaskManager
-    TaskManager manager = new InMemoryTaskManager();
+    TaskManager manager;
     // передаём его в качестве аргумента в конструктор HttpTaskServer
-    HttpTaskServer taskServer = new HttpTaskServer(manager);
-    public static Gson gson;
-
-    public static Type type = new TypeToken<List<? extends Task>>() {
-    }.getType();
-
+    HttpTaskServer taskServer;
+    Gson gson;
 
     public HttpTaskManagerHistoryTest() throws IOException {
+        manager = new InMemoryTaskManager();
+        taskServer = new HttpTaskServer(manager);
+        gson = HttpTaskServer.getGson();
     }
 
     @BeforeEach
     public void setUp() {
         gson = new GsonBuilder()
-                .registerTypeAdapter(type, new JsonResponseDeserialize())
+                .registerTypeAdapter(JsonResponseDeserialize.type, new JsonResponseDeserialize())
                 .create();
         manager.removeAllTasks();
         manager.removeAllSubtasks();
@@ -51,45 +48,9 @@ public class HttpTaskManagerHistoryTest {
         taskServer.stop();
     }
 
-    public static class JsonResponseDeserialize implements JsonDeserializer<List<? extends Task>> {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .create();
-
-        @Override
-        public List<? extends Task> deserialize(JsonElement element, Type type, JsonDeserializationContext context) throws JsonParseException {
-            List<Task> listToReturn = new ArrayList<>();
-            JsonArray jsonArray = element.getAsJsonArray();
-            for (JsonElement jsonElement : jsonArray) {
-                Task task;
-                if (jsonElement.getAsJsonObject().get("epicId") != null) {
-                    task = gson.fromJson(jsonElement, Subtask.class);
-                    if (task != null) {
-                        listToReturn.add(task);
-                        continue;
-                    }
-                }
-                if (jsonElement.getAsJsonObject().get("subtasksIds") != null) {
-                    task = gson.fromJson(jsonElement, Epic.class);
-                    if (task != null) {
-                        listToReturn.add(task);
-                        continue;
-                    }
-                }
-                if (jsonElement.getAsJsonObject().get("epicId") == null && jsonElement.getAsJsonObject().get("subtasksIds") == null) {
-                    task = gson.fromJson(jsonElement, Task.class);
-                    if (task != null) {
-                        listToReturn.add(task);
-                    }
-                }
-            }
-            return listToReturn;
-        }
-    }
 
     @Test
-    public void testGetHistory() throws IOException, InterruptedException, IntersectionException, NotFoundException {
+    public void testGetHistory() throws IOException, InterruptedException {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
@@ -157,7 +118,7 @@ public class HttpTaskManagerHistoryTest {
         // проверяем код ответа
         assertEquals(200, response.statusCode());
 
-        List<? extends Task> allTasksFromResponse = gson.fromJson(response.body(), type);
+        List<? extends Task> allTasksFromResponse = gson.fromJson(response.body(), JsonResponseDeserialize.type);
 
         assertTrue((TaskTest.taskFieldsEquals(allTasksFromResponse.get(0), task1)),
                 "Задача находится на неверном месте или отсутствует в истории");

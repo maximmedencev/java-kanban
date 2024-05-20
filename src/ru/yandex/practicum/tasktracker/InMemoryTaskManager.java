@@ -152,7 +152,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void addTask(Task task) throws IntersectionException {
+    public void addTask(Task task) {
         if (task == null || task.getClass() != Task.class)
             return;
         setIdForNewTask(task);
@@ -173,7 +173,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void addSubtask(Subtask subtask) throws IntersectionException {
+    public void addSubtask(Subtask subtask) {
         if (subtask == null)
             return;
         setIdForNewTask(subtask);
@@ -195,7 +195,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void addSubtask(int epicId, Subtask subtask) throws IntersectionException {
+    public void addSubtask(int epicId, Subtask subtask) {
         if (subtask == null)
             return;
         setIdForNewTask(subtask);
@@ -260,7 +260,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTask(int id) throws NotFoundException {
+    public Task getTask(int id) {
         if (tasks.containsKey(id)) {
             historyManager.add(tasks.get(id));
             return this.tasks.get(id);
@@ -269,7 +269,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Epic getEpic(int id) throws NotFoundException {
+    public Epic getEpic(int id) {
         if (epics.containsKey(id)) {
             historyManager.add(epics.get(id));
             return this.epics.get(id);
@@ -278,7 +278,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Subtask getSubtask(int id) throws NotFoundException {
+    public Subtask getSubtask(int id) {
         if (subtasks.containsKey(id)) {
             historyManager.add(subtasks.get(id));
             return this.subtasks.get(id);
@@ -291,7 +291,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateTask(Task task) throws IntersectionException {
+    public void updateTask(Task task) {
         if (tasks.containsKey(task.getId())) {
             if (!validateTaskTime(task)) {
                 throw new IntersectionException("Задача пересекает существующую задачу");
@@ -308,7 +308,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) throws IntersectionException {
+    public void updateSubtask(Subtask subtask) {
         if (subtasks.containsKey(subtask.getId())) {
             int epicId = subtasks.get(subtask.getId()).getEpicId();
             if (!validateTaskTime(subtask)) {

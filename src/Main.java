@@ -25,7 +25,7 @@ public class Main {
         manager.getHistory().forEach(System.out::println);
     }
 
-    public static void main(String[] args) throws IntersectionException {
+    public static void main(String[] args) {
         File file = new File("java-kanban-save.csv");
         fileBackedTaskManager = FileBackedTaskManager.loadFromFile(file);
         System.out.println("Начало работы программы...");

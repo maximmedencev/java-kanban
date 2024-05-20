@@ -2,16 +2,15 @@ package ru.yandex.practicum.tasktracker.http;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import ru.yandex.practicum.tasktracker.TaskManager;
 
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-public class HistoryHandler extends BaseHttpHandler implements HttpHandler {
+public class HistoryHandler extends BaseHttpHandler {
 
-    protected Gson gson;
-    protected TaskManager taskManager;
+    private Gson gson;
+    private TaskManager taskManager;
 
     public HistoryHandler(Gson gson, TaskManager taskManager) {
         this.gson = gson;

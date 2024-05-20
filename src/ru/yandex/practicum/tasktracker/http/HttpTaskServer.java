@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpServer;
 import ru.yandex.practicum.tasktracker.FileBackedTaskManager;
-import ru.yandex.practicum.tasktracker.IntersectionException;
 import ru.yandex.practicum.tasktracker.TaskManager;
 
 import java.io.File;
@@ -32,7 +31,7 @@ public class HttpTaskServer {
                 .create();
     }
 
-    public static void main(String[] args) throws IntersectionException, IOException {
+    public static void main(String[] args) throws IOException {
 
         File file = new File("java-kanban-save.csv");
         TaskManager fileBackedTaskManager = FileBackedTaskManager.loadFromFile(file);

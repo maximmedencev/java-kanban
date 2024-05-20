@@ -11,7 +11,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    List<Task> getHistory();
     @Test
-    public void shouldReturnHistoryListWithSpecifiedTasks() throws IntersectionException, NotFoundException {
+    public void shouldReturnHistoryListWithSpecifiedTasks() {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
@@ -55,7 +55,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    List<Task> getTasksList();
     @Test
-    public void shouldReturnListWithSpecifiedTasks() throws IntersectionException {
+    public void shouldReturnListWithSpecifiedTasks() {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
@@ -118,7 +118,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    List<Task> getSubtasksList();
     @Test
-    public void shouldReturnListWithSpecifiedSubtasks() throws IntersectionException {
+    public void shouldReturnListWithSpecifiedSubtasks() {
 
         Epic epic1 = new Epic("Epic1 name", "Epic1 description");
 
@@ -155,7 +155,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    void removeAllTasks();
     @Test
-    public void shouldHaveZeroSizeIfAllTasksRemoved() throws IntersectionException {
+    public void shouldHaveZeroSizeIfAllTasksRemoved() {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
@@ -207,7 +207,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    void removeAllSubtasks();
     @Test
-    public void shouldHaveZeroSizeIfAllSubtasksRemoved() throws IntersectionException {
+    public void shouldHaveZeroSizeIfAllSubtasksRemoved() {
         Epic epic1 = new Epic("Epic1 name", "Epic1 description");
         Subtask subtask1 = new Subtask("Subtask1 name",
                 "Subtask1 description",
@@ -312,7 +312,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    void addTask(Task task);
     @Test
-    public void shouldHaveSpecifiedTaskAfterAdd() throws IntersectionException {
+    public void shouldHaveSpecifiedTaskAfterAdd() {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
@@ -335,7 +335,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    void addSubtask(int epicId, Subtask subtask);
     @Test
-    public void shouldHaveSpecifiedSubtaskAfterAdd() throws IntersectionException {
+    public void shouldHaveSpecifiedSubtaskAfterAdd() {
         Epic epic1 = new Epic("Epic1 name", "Epic1 description");
         Subtask subtask1 = new Subtask("Subtask1 name",
                 "Subtask1 description",
@@ -351,7 +351,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    int addTask(int id, Task task);
     @Test
-    public void shouldHaveTaskWithSpecifiedIdAfterAdd() throws NotFoundException {
+    public void shouldHaveTaskWithSpecifiedIdAfterAdd() {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
@@ -366,7 +366,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    int addEpic(int id, Epic epic);
     @Test
-    public void shouldHaveEpicWithSpecifiedIdAfterAdd() throws NotFoundException {
+    public void shouldHaveEpicWithSpecifiedIdAfterAdd() {
         Epic epic1 = new Epic("Epic1 name", "Epic1 description");
         taskManager.addEpic(1, epic1);
         Assertions.assertEquals(epic1, taskManager.getEpic(1), "Добавленный эпик не найден");
@@ -377,7 +377,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     //    int addSubtask(int id, int epicId, Subtask subtask);
     //задачи с заданным id и сгенерированным id не конфликтуют внутри менеджера
     @Test
-    public void shouldReturnMinus1IfSubtasksIdsConflict() throws IntersectionException {
+    public void shouldReturnMinus1IfSubtasksIdsConflict() {
         Subtask subtask1 = new Subtask("Name1",
                 "Description1",
                 TaskStatus.NEW,
@@ -396,7 +396,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnMinus2WhenNull() throws IntersectionException {
+    public void shouldReturnMinus2WhenNull() {
         Subtask subtask1 = new Subtask("Name1",
                 "Description1",
                 TaskStatus.NEW,
@@ -412,7 +412,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
     }
 
     @Test
-    public void shouldReturnMinus3WhenSubtasksIntersects() throws IntersectionException {
+    public void shouldReturnMinus3WhenSubtasksIntersects() {
         Subtask subtask1 = new Subtask(1,
                 "Name1",
                 "Description1",
@@ -435,7 +435,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    Task getTask(int id);
     @Test
-    public void shouldGetTaskWithSpecifiedId() throws NotFoundException {
+    public void shouldGetTaskWithSpecifiedId() {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
@@ -453,7 +453,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    Epic getEpic(int id);
     @Test
-    public void shouldGetEpicWithSpecifiedId() throws NotFoundException {
+    public void shouldGetEpicWithSpecifiedId() {
         Epic epic1 = new Epic("Epic1 name", "Epic1 description");
         taskManager.addEpic(1, epic1);
         Assertions.assertEquals(epic1,
@@ -465,7 +465,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    Subtask getSubtask(int id);
     @Test
-    public void shouldGetSubtaskWithSpecifiedId() throws IntersectionException, NotFoundException {
+    public void shouldGetSubtaskWithSpecifiedId() {
         Epic epic1 = new Epic("Epic1 name", "Epic1 description");
         Subtask subtask1 = new Subtask(1,
                 "Name1",
@@ -511,7 +511,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    void updateTask(Task task);
     @Test
-    public void shouldReturnNewTaskAfterUpdate() throws IntersectionException, NotFoundException {
+    public void shouldReturnNewTaskAfterUpdate() {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
@@ -537,7 +537,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    void updateEpic(Epic epic);
     @Test
-    public void shouldReturnNewEpicAfterUpdate() throws NotFoundException {
+    public void shouldReturnNewEpicAfterUpdate() {
         Epic epic1 = new Epic(1, "Epic1 name", "Epic1 description");
         Epic epic2 = new Epic(1, "Epic2 name", "Epic2 description");
 
@@ -556,7 +556,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     //    void updateSubtask(Subtask subtask);
     @Test
-    public void shouldReturnNewSubtaskAfterUpdate() throws NotFoundException, IntersectionException {
+    public void shouldReturnNewSubtaskAfterUpdate() {
         Subtask subtask1 = new Subtask(2,
                 "Name1",
                 "Description1",

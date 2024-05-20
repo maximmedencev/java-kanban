@@ -20,12 +20,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpTaskManagerTasksTest {
     // создаём экземпляр InMemoryTaskManager
-    TaskManager manager = new InMemoryTaskManager();
+    TaskManager manager;
     // передаём его в качестве аргумента в конструктор HttpTaskServer
-    HttpTaskServer taskServer = new HttpTaskServer(manager);
-    Gson gson = HttpTaskServer.getGson();
+    HttpTaskServer taskServer;
+    Gson gson;
 
     public HttpTaskManagerTasksTest() throws IOException {
+        manager = new InMemoryTaskManager();
+        taskServer = new HttpTaskServer(manager);
+        gson = HttpTaskServer.getGson();
     }
 
     static class TaskListTypeToken extends TypeToken<List<Task>> {
@@ -45,7 +48,7 @@ public class HttpTaskManagerTasksTest {
     }
 
     @Test
-    public void testGetTasks() throws IOException, InterruptedException, IntersectionException {
+    public void testGetTasks() throws IOException, InterruptedException {
         // создаём задачу
         Task task1 = new Task(5, "Task1 name",
                 "Task1 description",
@@ -88,7 +91,7 @@ public class HttpTaskManagerTasksTest {
     }
 
     @Test
-    public void testGetTask() throws IOException, InterruptedException, IntersectionException, NotFoundException {
+    public void testGetTask() throws IOException, InterruptedException {
         // создаём задачу
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
@@ -168,7 +171,7 @@ public class HttpTaskManagerTasksTest {
     }
 
     @Test
-    public void shouldGet406WhenIntersects() throws IOException, InterruptedException, IntersectionException {
+    public void shouldGet406WhenIntersects() throws IOException, InterruptedException {
 
         // создаём задачу
         Task task1 = new Task("Task 1", "Desc task 1",
@@ -194,7 +197,7 @@ public class HttpTaskManagerTasksTest {
     }
 
     @Test
-    public void testUpdateTask() throws IOException, InterruptedException, IntersectionException, NotFoundException {
+    public void testUpdateTask() throws IOException, InterruptedException {
         // создаём задачу
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
@@ -229,7 +232,7 @@ public class HttpTaskManagerTasksTest {
     }
 
     @Test
-    public void testDeleteTask() throws IOException, InterruptedException, IntersectionException {
+    public void testDeleteTask() throws IOException, InterruptedException {
         // создаём задачу
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",

@@ -20,12 +20,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpTaskManagerSubtasksTest {
     // создаём экземпляр InMemoryTaskManager
-    TaskManager manager = new InMemoryTaskManager();
+    TaskManager manager;
     // передаём его в качестве аргумента в конструктор HttpTaskServer
-    HttpTaskServer taskServer = new HttpTaskServer(manager);
-    Gson gson = HttpTaskServer.getGson();
+    HttpTaskServer taskServer;
+    Gson gson;
 
     public HttpTaskManagerSubtasksTest() throws IOException {
+        manager = new InMemoryTaskManager();
+        taskServer = new HttpTaskServer(manager);
+        gson = HttpTaskServer.getGson();
     }
 
     static class SubtaskListTypeToken extends TypeToken<List<Subtask>> {
@@ -45,7 +48,7 @@ public class HttpTaskManagerSubtasksTest {
     }
 
     @Test
-    public void testGetSubtasks() throws IOException, InterruptedException, IntersectionException {
+    public void testGetSubtasks() throws IOException, InterruptedException {
         // создаём задачу
         Subtask subtask1 = new Subtask(5, "Subtask1 name",
                 "Subtask1 description",
@@ -92,7 +95,7 @@ public class HttpTaskManagerSubtasksTest {
     }
 
     @Test
-    public void testGetSubtask() throws IOException, InterruptedException, IntersectionException, NotFoundException {
+    public void testGetSubtask() throws IOException, InterruptedException {
         // создаём задачу
         Subtask subtask1 = new Subtask(1, "Subtask1 name",
                 "Subtask1 description",
@@ -169,7 +172,7 @@ public class HttpTaskManagerSubtasksTest {
     }
 
     @Test
-    public void shouldGet406WhenIntersects() throws IOException, InterruptedException, IntersectionException {
+    public void shouldGet406WhenIntersects() throws IOException, InterruptedException {
         // создаём задачу
         Subtask subtask1 = new Subtask("Subtask 1", "Desc subtask 1",
                 TaskStatus.NEW, LocalDateTime.now(), Duration.ofMinutes(5));
@@ -189,7 +192,7 @@ public class HttpTaskManagerSubtasksTest {
     }
 
     @Test
-    public void testUpdateSubtask() throws IOException, InterruptedException, IntersectionException, NotFoundException {
+    public void testUpdateSubtask() throws IOException, InterruptedException {
         // создаём задачу
         Subtask subtask1 = new Subtask(1, "Subtask1 name",
                 "Subtask1 description",
@@ -227,7 +230,7 @@ public class HttpTaskManagerSubtasksTest {
     }
 
     @Test
-    public void testDeleteSubtask() throws IOException, InterruptedException, IntersectionException {
+    public void testDeleteSubtask() throws IOException, InterruptedException {
         // создаём задачу
         Subtask subtask1 = new Subtask(1, "Subtask1 name",
                 "Subtask1 description",

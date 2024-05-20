@@ -2,7 +2,6 @@ package ru.yandex.practicum.tasktracker.http;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import ru.yandex.practicum.tasktracker.Epic;
 import ru.yandex.practicum.tasktracker.NotFoundException;
 import ru.yandex.practicum.tasktracker.TaskManager;
@@ -13,10 +12,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class EpicHandler extends BaseHttpHandler implements HttpHandler {
+public class EpicHandler extends BaseHttpHandler {
 
-    protected Gson gson;
-    protected TaskManager taskManager;
+    private Gson gson;
+    private TaskManager taskManager;
 
     public EpicHandler(Gson gson, TaskManager taskManager) {
         this.gson = gson;
@@ -31,33 +30,33 @@ public class EpicHandler extends BaseHttpHandler implements HttpHandler {
         if (path.charAt(path.length() - 1) == '/')
             path = path.substring(0, path.length() - 1);
 
+
         switch (requestMethod) {
             case "GET": {
-                if (Pattern.matches("^/epics$", path)) {
-                    super.sendText(exchange, gson.toJson(taskManager.getEpicsList()));
-                } else if (Pattern.matches("^/epics/\\d+$", path)) {
-                    String strEpicId = path.replaceFirst("/epics/", "");
-                    Epic epic = null;
-                    try {
+                try {
+                    if (Pattern.matches("^/epics$", path)) {
+                        super.sendText(exchange, gson.toJson(taskManager.getEpicsList()));
+                    } else if (Pattern.matches("^/epics/\\d+$", path)) {
+                        String strEpicId = path.replaceFirst("/epics/", "");
+                        Epic epic = null;
                         epic = taskManager.getEpic(Integer.parseInt(strEpicId));
-                    } catch (NotFoundException e) {
-                        super.sendNotFound(exchange, "Эпик не найден");
-                    }
-                    super.sendText(exchange, gson.toJson(epic));
-                } else if (Pattern.matches("^/epics/\\d+/subtasks$", path)) {
-                    String strEpicId = path
-                            .replaceFirst("/epics/", "")
-                            .replaceFirst("/subtasks", "");
-                    Epic epic = null;
-                    try {
+                        super.sendText(exchange, gson.toJson(epic));
+                    } else if (Pattern.matches("^/epics/\\d+/subtasks$", path)) {
+                        String strEpicId = path
+                                .replaceFirst("/epics/", "")
+                                .replaceFirst("/subtasks", "");
+                        Epic epic = null;
                         epic = taskManager.getEpic(Integer.parseInt(strEpicId));
                         super.sendText(exchange, gson.toJson(taskManager.getEpicSubtaskList(epic.getId())));
-                    } catch (NotFoundException e) {
                         super.sendNotFound(exchange, "Эпик не найден");
+                    } else {
+                        super.sendNotFound(exchange, "Страница не найдена");
                     }
-                } else {
-                    super.sendNotFound(exchange, "Страница не найдена");
+
+                } catch (NotFoundException e) {
+                    super.sendNotFound(exchange, "Эпик не найден");
                 }
+
                 break;
             }
             case "POST": {

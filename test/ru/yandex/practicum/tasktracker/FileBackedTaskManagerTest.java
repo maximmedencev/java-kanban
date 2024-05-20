@@ -18,7 +18,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     File saveFile;
 
     @BeforeEach
-    public void setUp() throws IOException, IntersectionException {
+    public void setUp() throws IOException {
         saveFile = File.createTempFile("java-kanban-save-test", ".csv");
         super.taskManager = FileBackedTaskManager.loadFromFile(saveFile);
     }
@@ -37,7 +37,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
 
 
     @Test
-    public void taskListsShouldBeEmptyForEmptySaveFile() throws IntersectionException {
+    public void taskListsShouldBeEmptyForEmptySaveFile() {
         fileBackedTaskManager = FileBackedTaskManager.loadFromFile(saveFile);
         Assertions.assertTrue(fileBackedTaskManager.getTasksList().isEmpty(), "Список задач не пустой!");
         Assertions.assertTrue(fileBackedTaskManager.getEpicsList().isEmpty(), "Список эпиков не пустой!");
@@ -45,7 +45,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
 
     @Test
-    public void fileShouldBeEmptyForEmptyTaskLists() throws IOException, IntersectionException {
+    public void fileShouldBeEmptyForEmptyTaskLists() throws IOException {
         fileBackedTaskManager = FileBackedTaskManager.loadFromFile(saveFile);
         String saveData;
         saveData = Files.readString(saveFile.toPath());
@@ -53,7 +53,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
 
     @Test
-    public void fileAndTaskListsShouldHaveSameDataAfterLoad() throws IOException, IntersectionException {
+    public void fileAndTaskListsShouldHaveSameDataAfterLoad() throws IOException {
         String data =
                 "id,type,name,status,description,epic\n" +
                         "1,TASK,Имя таска 1,NEW,Описание таска 1,\n" +
@@ -122,7 +122,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     }
 
     @Test
-    public void fileAndTaskListsShouldHaveSameDataAfterSave() throws IOException, IntersectionException {
+    public void fileAndTaskListsShouldHaveSameDataAfterSave() throws IOException {
         fileBackedTaskManager = FileBackedTaskManager.loadFromFile(saveFile);
         Epic epic1 = new Epic("Тестовый эпик №1",
                 "Описание эпик №1");

@@ -21,19 +21,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HttpTaskManagerPrioritizedTest {
     // создаём экземпляр InMemoryTaskManager
-    TaskManager manager = new InMemoryTaskManager();
+    TaskManager manager;
     // передаём его в качестве аргумента в конструктор HttpTaskServer
-    HttpTaskServer taskServer = new HttpTaskServer(manager);
-    public static Gson gson;
+    HttpTaskServer taskServer;
+    Gson gson;
 
     public HttpTaskManagerPrioritizedTest() throws IOException {
+        manager = new InMemoryTaskManager();
+        taskServer = new HttpTaskServer(manager);
+        gson = HttpTaskServer.getGson();
     }
 
     @BeforeEach
     public void setUp() {
         gson = new GsonBuilder()
-                .registerTypeAdapter(HttpTaskManagerHistoryTest.type,
-                        new HttpTaskManagerHistoryTest.JsonResponseDeserialize())
+                .registerTypeAdapter(JsonResponseDeserialize.type,
+                        new JsonResponseDeserialize())
                 .create();
         manager.removeAllTasks();
         manager.removeAllSubtasks();
@@ -47,7 +50,7 @@ public class HttpTaskManagerPrioritizedTest {
     }
 
     @Test
-    public void testGetPrioritized() throws IOException, InterruptedException, IntersectionException {
+    public void testGetPrioritized() throws IOException, InterruptedException {
         Task task1 = new Task(1, "Task1 name",
                 "Task1 description",
                 TaskStatus.NEW,
@@ -111,7 +114,7 @@ public class HttpTaskManagerPrioritizedTest {
         // проверяем код ответа
         assertEquals(200, response.statusCode());
 
-        List<? extends Task> allTasksFromResponse = gson.fromJson(response.body(), HttpTaskManagerHistoryTest.type);
+        List<? extends Task> allTasksFromResponse = gson.fromJson(response.body(), JsonResponseDeserialize.type);
 
         assertTrue(TaskTest.taskFieldsEquals(allTasksFromResponse.get(0), task1),
                 "Задача не найдена в проритизированном списке");

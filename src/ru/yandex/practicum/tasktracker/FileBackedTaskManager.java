@@ -12,16 +12,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File saveFile;
     public static DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
-    public FileBackedTaskManager(File saveFile) throws IntersectionException {
+    public FileBackedTaskManager(File saveFile) {
         this.saveFile = saveFile;
         load();
     }
 
-    public static FileBackedTaskManager loadFromFile(File file) throws IntersectionException {
+    public static FileBackedTaskManager loadFromFile(File file) {
         return new FileBackedTaskManager(file);
     }
 
-    private void load() throws IntersectionException {
+    private void load() {
         String saveData;
         if (saveFile.exists() && !saveFile.isDirectory()) {
             try {
@@ -62,7 +62,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void addTask(Task task) throws IntersectionException {
+    public void addTask(Task task) {
         super.addTask(task);
         save();
     }
@@ -74,13 +74,13 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void addSubtask(int epicId, Subtask subtask) throws IntersectionException {
+    public void addSubtask(int epicId, Subtask subtask) {
         super.addSubtask(epicId, subtask);
         save();
     }
 
     @Override
-    public void addSubtask(Subtask subtask) throws IntersectionException {
+    public void addSubtask(Subtask subtask) {
         super.addSubtask(subtask);
         save();
     }
@@ -172,7 +172,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateTask(Task task) throws IntersectionException {
+    public void updateTask(Task task) {
         super.updateTask(task);
         save();
     }
@@ -184,7 +184,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     @Override
-    public void updateSubtask(Subtask subtask) throws IntersectionException {
+    public void updateSubtask(Subtask subtask) {
         super.updateSubtask(subtask);
         save();
     }

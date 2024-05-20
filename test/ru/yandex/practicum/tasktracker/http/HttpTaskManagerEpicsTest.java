@@ -20,12 +20,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpTaskManagerEpicsTest {
     // создаём экземпляр InMemoryTaskManager
-    TaskManager manager = new InMemoryTaskManager();
+    TaskManager manager;
     // передаём его в качестве аргумента в конструктор HttpTaskServer
-    HttpTaskServer taskServer = new HttpTaskServer(manager);
-    Gson gson = HttpTaskServer.getGson();
+    HttpTaskServer taskServer;
+    Gson gson;
 
     public HttpTaskManagerEpicsTest() throws IOException {
+        manager = new InMemoryTaskManager();
+        taskServer = new HttpTaskServer(manager);
+        gson = HttpTaskServer.getGson();
     }
 
     class EpicListTypeToken extends TypeToken<List<Epic>> {
@@ -82,7 +85,7 @@ public class HttpTaskManagerEpicsTest {
     }
 
     @Test
-    public void testGetEpic() throws IOException, InterruptedException, NotFoundException {
+    public void testGetEpic() throws IOException, InterruptedException {
         // создаём задачу
         Epic epic1 = new Epic(1, "Epic1 name",
                 "Epics1 description");
@@ -126,7 +129,7 @@ public class HttpTaskManagerEpicsTest {
     }
 
     @Test
-    public void testGetEpicSubtasks() throws IOException, InterruptedException, NotFoundException, IntersectionException {
+    public void testGetEpicSubtasks() throws IOException, InterruptedException {
         // создаём задачу
         Epic epic1 = new Epic(1, "Epic1 name",
                 "Epics1 description");
@@ -209,7 +212,7 @@ public class HttpTaskManagerEpicsTest {
     }
 
     @Test
-    public void testDeleteEpic() throws IOException, InterruptedException, IntersectionException {
+    public void testDeleteEpic() throws IOException, InterruptedException {
         Epic epic1 = new Epic(1, "Epic1 name",
                 "Epics1 description");
 
