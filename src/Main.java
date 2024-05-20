@@ -1,5 +1,4 @@
 import ru.yandex.practicum.tasktracker.FileBackedTaskManager;
-import ru.yandex.practicum.tasktracker.IntersectionException;
 import ru.yandex.practicum.tasktracker.TaskManager;
 
 import java.io.File;
