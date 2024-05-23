@@ -212,6 +212,36 @@ public class HttpTaskManagerEpicsTest {
     }
 
     @Test
+    public void testUpdateEpic() throws IOException, InterruptedException {
+        // создаём задачу
+        Epic epic1 = new Epic(1, "Epic1 name",
+                "Epic1 description");
+
+        Epic epic2 = new Epic(1, "Epic1 name updated",
+                "Epic1 description updated");
+
+        // конвертируем её в JSON
+        manager.addEpic(epic1);
+
+        String epicJson = gson.toJson(epic2);
+
+        // создаём HTTP-клиент и запрос
+        HttpClient client = HttpClient.newHttpClient();
+        URI url = URI.create("http://localhost:8080/epics");
+        HttpRequest request = HttpRequest.newBuilder().uri(url).POST(HttpRequest.BodyPublishers.ofString(epicJson)).build();
+
+        // вызываем рест, отвечающий за создание задач
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        // проверяем код ответа
+        assertEquals(200, response.statusCode());
+
+        assertEquals("Epic1 name updated",
+                manager.getEpic(1).getName(),
+                "Имя эпика не равно ожидаемому после обновления");
+    }
+
+
+    @Test
     public void testDeleteEpic() throws IOException, InterruptedException {
         Epic epic1 = new Epic(1, "Epic1 name",
                 "Epics1 description");

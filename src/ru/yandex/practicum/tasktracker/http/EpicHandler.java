@@ -2,9 +2,7 @@ package ru.yandex.practicum.tasktracker.http;
 
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
-import ru.yandex.practicum.tasktracker.Epic;
-import ru.yandex.practicum.tasktracker.NotFoundException;
-import ru.yandex.practicum.tasktracker.TaskManager;
+import ru.yandex.practicum.tasktracker.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,8 +61,15 @@ public class EpicHandler extends BaseHttpHandler {
                 InputStream inputStream = exchange.getRequestBody();
                 String body = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
                 Epic epic = gson.fromJson(body, Epic.class);
-                taskManager.addEpic(epic);
-                super.sendText(exchange, "Эпик успешно добавлен");
+
+                if (epic.getId() == 0) {
+                    taskManager.addEpic(epic);
+                    super.sendText(exchange, "Эпик успешно добавлен");
+                } else {
+
+                    taskManager.updateEpic(epic);
+                    super.sendText(exchange, "Эпик успешно обновлен");
+                }
                 break;
             }
             case "DELETE": {
