@@ -358,9 +358,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 LocalDateTime.of(2024, 5, 2, 12, 0, 0),
                 Duration.ofMinutes(30));
         taskManager.addTask(1, task1);
-        Assertions.assertEquals(task1, taskManager.getTask(1).get(), "Добавленная подзадача не найдена");
+        Assertions.assertEquals(task1, taskManager.getTask(1), "Добавленная подзадача не найдена");
         Assertions.assertTrue(TaskTest.taskFieldsEquals(task1,
-                        taskManager.getTask(1).get()),
+                        taskManager.getTask(1)),
                 "Поля добавленной и запрошенной задачи не совпадают");
     }
 
@@ -369,8 +369,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
     public void shouldHaveEpicWithSpecifiedIdAfterAdd() {
         Epic epic1 = new Epic("Epic1 name", "Epic1 description");
         taskManager.addEpic(1, epic1);
-        Assertions.assertEquals(epic1, taskManager.getEpic(1).get(), "Добавленный эпик не найден");
-        Assertions.assertTrue(EpicTest.epicsFieldsEquals(epic1, taskManager.getEpic(1).get()),
+        Assertions.assertEquals(epic1, taskManager.getEpic(1), "Добавленный эпик не найден");
+        Assertions.assertTrue(EpicTest.epicsFieldsEquals(epic1, taskManager.getEpic(1)),
                 "Поля добавленного и запрошенного эпика не совпадают");
     }
 
@@ -443,11 +443,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 Duration.ofMinutes(30));
 
         taskManager.addTask(1, task1);
-        Assertions.assertEquals(task1, taskManager.getTask(1).get(),
+        Assertions.assertEquals(task1, taskManager.getTask(1),
                 "У запрошенной и добавленной задачи не совпадают id");
         Assertions.assertTrue(TaskTest.taskFieldsEquals(
                         task1,
-                        taskManager.getTask(1).get()),
+                        taskManager.getTask(1)),
                 "Поля запрошенной и ожидаемой задачи не совпадапют");
     }
 
@@ -457,9 +457,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
         Epic epic1 = new Epic("Epic1 name", "Epic1 description");
         taskManager.addEpic(1, epic1);
         Assertions.assertEquals(epic1,
-                taskManager.getEpic(1).get(),
+                taskManager.getEpic(1),
                 "У запрошенного и добавленного эпика не совпадают id");
-        Assertions.assertTrue(EpicTest.epicsFieldsEquals(epic1, taskManager.getEpic(1).get()),
+        Assertions.assertTrue(EpicTest.epicsFieldsEquals(epic1, taskManager.getEpic(1)),
                 "Поля запрошенного и ожидаемого эпиков не совпадапют");
     }
 
@@ -475,8 +475,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
                 Duration.ofMinutes(30));
         taskManager.addEpic(1, epic1);
         taskManager.addSubtask(1, subtask1);
-        Assertions.assertEquals(subtask1, taskManager.getSubtask(1).get());
-        Assertions.assertTrue(SubtaskTest.subtasksFieldsEquals(subtask1, taskManager.getSubtask(1).get()),
+        Assertions.assertEquals(subtask1, taskManager.getSubtask(1));
+        Assertions.assertTrue(SubtaskTest.subtasksFieldsEquals(subtask1, taskManager.getSubtask(1)),
                 "Поля запрошенной и ожидаемой подзадачи не совпадапют");
     }
 
@@ -528,10 +528,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.updateTask(task2);
 
         Assertions.assertFalse(TaskTest.taskFieldsEquals(task1,
-                        taskManager.getTask(1).get()),
+                        taskManager.getTask(1)),
                 "После обновления задача осталась прежней");
         Assertions.assertTrue(TaskTest.taskFieldsEquals(task2,
-                        taskManager.getTask(1).get()),
+                        taskManager.getTask(1)),
                 "Задача не равена обновленной");
     }
 
@@ -546,11 +546,11 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         Assertions.assertFalse(EpicTest.epicsFieldsEquals(
                         epic1,
-                        taskManager.getEpic(1).get()),
+                        taskManager.getEpic(1)),
                 "После обновления эпик остался прежним");
         Assertions.assertTrue(EpicTest.epicsFieldsEquals(
                         epic2,
-                        taskManager.getEpic(1).get()),
+                        taskManager.getEpic(1)),
                 "Поля запрошенного и нового эпика не свопадают");
     }
 
@@ -577,10 +577,10 @@ abstract class TaskManagerTest<T extends TaskManager> {
         taskManager.updateSubtask(subtask2);
 
         Assertions.assertFalse(SubtaskTest.subtasksFieldsEquals(
-                        subtask1, taskManager.getSubtask(2).get()),
+                        subtask1, taskManager.getSubtask(2)),
                 "После обновления подзадача не изменилась");
         Assertions.assertTrue(SubtaskTest.subtasksFieldsEquals(subtask2,
-                        taskManager.getSubtask(2).get()),
+                        taskManager.getSubtask(2)),
                 "Поля запрошенной и новой подзадачи не свопадают");
     }
 

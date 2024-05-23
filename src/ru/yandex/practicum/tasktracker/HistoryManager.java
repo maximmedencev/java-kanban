@@ -8,5 +8,4 @@ public interface HistoryManager {
     void remove(int id);
 
     List<Task> getHistory(); // возвращать список просмотренных задач
-
 }

@@ -9,13 +9,9 @@ import java.time.LocalDateTime;
 
 class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
-    public void setup() {
-        super.taskManager = (InMemoryTaskManager) Managers.getDefault();
-    }
-
     @BeforeEach
-    public void beforeEach() {
-        setup();
+    public void setUp() {
+        super.taskManager = (InMemoryTaskManager) Managers.getDefault();
     }
 
     //InMemoryTaskManager действительно добавляет задачи разного типа и может найти их по id;
@@ -24,7 +20,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
         Task task1 = new Task("Name", "Description");
         super.taskManager.addTask(task1);
         Assertions.assertNotNull(super.taskManager.getTask(task1.getId()), "task равен null");
-        Assertions.assertEquals(task1.getId(), super.taskManager.getTask(task1.getId()).get().getId(),
+        Assertions.assertEquals(task1.getId(), super.taskManager.getTask(task1.getId()).getId(),
                 "по заданному id не содержится нужного объекта");
 
     }
@@ -43,7 +39,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
         Assertions.assertNotNull(super.taskManager.getSubtask(subtask1.getId()),
                 "subtask равен null");
         Assertions.assertEquals(subtask1Id,
-                super.taskManager.getSubtask(subtask1.getId()).get().getId(),
+                super.taskManager.getSubtask(subtask1.getId()).getId(),
                 "по заданному id не содержится нужного объекта");
     }
 
@@ -55,7 +51,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
         int epic1Id = epic1.getId();
         Assertions.assertNotNull(super.taskManager.getEpic(epic1Id),
                 "epic равен null");
-        Assertions.assertEquals(epic1Id, super.taskManager.getEpic(epic1.getId()).get().getId(),
+        Assertions.assertEquals(epic1Id, super.taskManager.getEpic(epic1.getId()).getId(),
                 "по заданному id не содержится нужного объекта");
     }
 
@@ -163,8 +159,8 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
         super.taskManager.removeSubtask(3);
         super.taskManager.removeSubtask(4);
 
-        Assertions.assertFalse(super.taskManager.getEpic(1).get().getSubtasksIds().contains(3));
-        Assertions.assertFalse(super.taskManager.getEpic(1).get().getSubtasksIds().contains(4));
+        Assertions.assertFalse(super.taskManager.getEpic(1).getSubtasksIds().contains(3));
+        Assertions.assertFalse(super.taskManager.getEpic(1).getSubtasksIds().contains(4));
     }
 
     @Test
@@ -188,7 +184,7 @@ class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
                 Duration.ofMinutes(30));
 
         super.taskManager.addTask(task1);
-        super.taskManager.addTask(task2);
+        Assertions.assertThrows(IntersectionException.class, () -> super.taskManager.addTask(task2));
         super.taskManager.addTask(task3);
 
         Assertions.assertTrue(super.taskManager.getTasksList().contains(task1));

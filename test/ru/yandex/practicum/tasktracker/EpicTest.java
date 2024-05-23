@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.tasktracker.Epic;
 
-class EpicTest {
+public class EpicTest {
 
     public static boolean epicsFieldsEquals(Epic epic1, Task epic2) {
         return (epic1.getId() == epic2.getId())

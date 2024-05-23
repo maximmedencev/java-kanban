@@ -48,8 +48,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     }
 
                     if (task.getClass() == Subtask.class) {
-                        epics.get(((Subtask) task).getEpicId()).addSubtaskId(task.getId());
-                        super.addSubtask((task).getId(), ((Subtask) task).getEpicId(), ((Subtask) task));
+                        if (epics.containsKey(((Subtask) task).getEpicId())) {
+                            epics.get(((Subtask) task).getEpicId()).addSubtaskId(task.getId());
+                            super.addSubtask((task).getId(), ((Subtask) task).getEpicId(), ((Subtask) task));
+                        } else {
+                            super.addSubtask((Subtask) task);
+                        }
                     }
                 }
                 super.newTaskId = maxIndex + 1;
@@ -72,6 +76,12 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void addSubtask(int epicId, Subtask subtask) {
         super.addSubtask(epicId, subtask);
+        save();
+    }
+
+    @Override
+    public void addSubtask(Subtask subtask) {
+        super.addSubtask(subtask);
         save();
     }
 
@@ -179,4 +189,21 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         save();
     }
 
+    @Override
+    public void removeTask(int taskId) {
+        super.removeTask(taskId);
+        save();
+    }
+
+    @Override
+    public void removeEpic(int epicId) {
+        super.removeEpic(epicId);
+        save();
+    }
+
+    @Override
+    public void removeSubtask(int subtaskId) {
+        super.removeSubtask(subtaskId);
+        save();
+    }
 }

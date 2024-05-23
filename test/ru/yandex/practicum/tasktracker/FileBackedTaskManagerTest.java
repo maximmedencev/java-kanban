@@ -17,13 +17,10 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
     FileBackedTaskManager fileBackedTaskManager;
     File saveFile;
 
-    public void setup() throws IOException{
+    @BeforeEach
+    public void setUp() throws IOException {
         saveFile = File.createTempFile("java-kanban-save-test", ".csv");
         super.taskManager = FileBackedTaskManager.loadFromFile(saveFile);
-    }
-    @BeforeEach
-    public void beforeEach() throws IOException {
-        setup();
     }
 
     @Test
@@ -133,19 +130,19 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskMan
         Subtask subtask1 = new Subtask("Тестовый сабтаск №1",
                 "Описание сабтаск №1",
                 TaskStatus.NEW,
-                LocalDateTime.now(),
+                LocalDateTime.of(2024, 5, 2, 11, 0, 0),
                 Duration.ofMinutes(10));
         fileBackedTaskManager.addSubtask(epic1.getId(), subtask1);
         Subtask subtask2 = new Subtask("Тестовый сабтаск №2",
                 "Описание сабтаск №2",
                 TaskStatus.DONE,
-                LocalDateTime.now(),
+                LocalDateTime.of(2024, 5, 2, 12, 0, 0),
                 Duration.ofMinutes(30));
         fileBackedTaskManager.addSubtask(epic1.getId(), subtask2);
         Task task1 = new Task("Тестовый таск №1",
                 "Описание таск №1",
                 TaskStatus.DONE,
-                LocalDateTime.now(),
+                LocalDateTime.of(2024, 5, 2, 13, 0, 0),
                 Duration.ofMinutes(30));
         fileBackedTaskManager.addTask(task1);
 
